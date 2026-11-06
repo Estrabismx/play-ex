@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Doomy · Control</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="celular">
+  <h1>Doomy plays DOOM</h1>
+  <p id="mensaje" class="aviso"></p>
+
+  <!-- 1. Unirse a una sala -->
+  <section id="vista-unirse">
+    <form id="form-unirse">
+      <p>
+        <label>Sala<br><input id="sala" autocomplete="off" autocapitalize="characters" maxlength="8" required></label>
+      </p>
+      <p>
+        <label>Tu nombre<br><input id="nombre" autocomplete="nickname" maxlength="20" required></label>
+      </p>
+      <p><button type="submit">Unirse</button></p>
+    </form>
+  </section>
+
+  <!-- 2. Lobby: elegir controles y sensores -->
+  <section id="vista-lobby" hidden>
+    <h2>Sala <span id="lobby-sala"></span></h2>
+    <p>Elige qué controlas y con qué sensor. Cada control tiene un solo dueño y
+       la partida no empieza hasta que todos estén elegidos.</p>
+    <ul id="lista-controles" class="controles"></ul>
+    <p>
+      <button type="button" id="listo">Estoy listo</button>
+      <span id="estado-listo"></span>
+    </p>
+    <p class="aviso">Al marcar "Estoy listo" se activan los sensores y se calibra la
+       posición neutral: sostén el celular como lo vas a usar.</p>
+  </section>
+
+  <!-- 3. Partida: indicadores y botones de los controles propios -->
+  <section id="vista-juego" hidden>
+    <div id="mis-controles"></div>
+    <p><button type="button" id="recalibrar">Recalibrar sensores</button></p>
+  </section>
+
+  <script src="https://unpkg.com/mqtt@5.10.1/dist/mqtt.min.js"></script>
+  <script src="config.js"></script>
+  <script src="comun.js"></script>
+  <script src="control.js"></script>
+</body>
+</html>

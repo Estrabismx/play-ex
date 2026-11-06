@@ -1,0 +1,99 @@
+/* Estilos básicos (provisorios): se reemplazarán más adelante. */
+
+body {
+  margin: 0 auto;
+  padding: 16px;
+  max-width: 1100px;
+  font-family: system-ui, sans-serif;
+  background: #fff;
+  color: #111;
+}
+
+.aviso { color: #555; font-size: 0.9em; }
+.error { color: #b00; }
+
+table { border-collapse: collapse; }
+th, td { border: 1px solid #ccc; padding: 4px 8px; text-align: left; }
+
+button { padding: 6px 12px; }
+
+/* ---------- PC ---------- */
+
+.sala {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+}
+
+#qr img, #qr canvas { display: block; }
+
+/* DOOM dibuja 320x200 con píxeles no cuadrados: se muestra en 4:3. */
+.pantalla {
+  position: relative;
+  width: min(100%, calc((100vh - 140px) * 4 / 3));
+  aspect-ratio: 4 / 3;
+  background: #000;
+}
+
+.pantalla:fullscreen { width: 100%; }
+
+#canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  outline: none;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: #000;
+  color: #ddd;
+  text-align: center;
+  padding: 16px;
+}
+
+.overlay[hidden] { display: none; }
+.overlay.error { color: #f66; }
+
+/* ---------- Celular ---------- */
+
+.celular input, .celular select { font-size: 16px; padding: 6px; }
+
+.controles { list-style: none; padding: 0; }
+.controles li { border-bottom: 1px solid #ccc; padding: 8px 0; }
+.controles p { margin: 4px 0; }
+
+.tarjeta {
+  border: 1px solid #ccc;
+  padding: 8px;
+  margin-bottom: 12px;
+}
+
+.tarjeta h2 { font-size: 1.1em; margin: 0 0 4px; }
+
+.indicador { font-family: monospace; font-size: 1.2em; }
+.indicador.activo { font-weight: bold; }
+
+.botones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Botones táctiles grandes, sin zoom ni selección al mantenerlos presionados. */
+button.tactil {
+  flex: 1 1 30%;
+  min-height: 64px;
+  font-size: 1.1em;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}

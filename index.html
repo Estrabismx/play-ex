@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Doomy plays DOOM</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="pc">
+  <h1>Doomy plays DOOM</h1>
+  <p id="conexion" class="aviso">Conectando al broker…</p>
+
+  <!-- Lobby: sala, QR y asignación de controles -->
+  <section id="lobby">
+    <div class="sala">
+      <div>
+        <h2>Sala <span id="codigo-sala"></span></h2>
+        <p>Escanea el código con el celular para unirte (máximo <span id="max-jugadores"></span> jugadores).</p>
+        <div id="qr"></div>
+        <p><a id="enlace-control" target="_blank" rel="noopener"></a></p>
+        <p>
+          <button type="button" id="nueva-sala">Nueva sala</button>
+          <button type="button" id="borrar-partidas">Borrar partidas guardadas</button>
+        </p>
+      </div>
+
+      <div>
+        <h2>Jugadores</h2>
+        <ul id="lista-jugadores"></ul>
+      </div>
+    </div>
+
+    <h2>Controles</h2>
+    <table>
+      <thead>
+        <tr><th>Control</th><th>Jugador</th><th>Sensor</th></tr>
+      </thead>
+      <tbody id="tabla-controles"></tbody>
+    </table>
+
+    <p>
+      <button type="button" id="iniciar" disabled>Iniciar partida</button>
+      <span id="motivo-iniciar" class="aviso"></span>
+    </p>
+  </section>
+
+  <!-- Juego: el motor de DOOM dibuja en el canvas -->
+  <section id="juego" hidden>
+    <div class="pantalla" id="pantalla">
+      <canvas id="canvas" width="320" height="200" tabindex="-1"
+              oncontextmenu="event.preventDefault()"></canvas>
+      <div class="overlay" id="overlay">
+        <p id="estado-motor">Cargando…</p>
+        <progress id="progreso" max="100" value="0" hidden></progress>
+      </div>
+    </div>
+    <p>
+      <button type="button" id="pantalla-completa">Pantalla completa</button>
+      Sala <strong id="codigo-sala-juego"></strong> ·
+      el teclado del PC está desactivado: se juega solo con los celulares.
+    </p>
+    <p id="registro" class="aviso"></p>
+  </section>
+
+  <script src="https://unpkg.com/mqtt@5.10.1/dist/mqtt.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="config.js"></script>
+  <script src="comun.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
