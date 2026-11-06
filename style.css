@@ -66,9 +66,6 @@ button { padding: 6px 12px; }
 
 .celular input, .celular select { font-size: 16px; padding: 6px; }
 
-.controles { list-style: none; padding: 0; }
-.controles li { border-bottom: 1px solid #ccc; padding: 8px 0; }
-.controles p { margin: 4px 0; }
 
 .tarjeta {
   border: 1px solid #ccc;
@@ -112,7 +109,111 @@ button.tactil {
 
 /* ---------- Partida en el celular ---------- */
 
-.teclas { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+/* Lobby, pausa y partida ocupan toda la pantalla, sin scroll. */
+body.celular.fija {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  overflow: hidden;
+  overscroll-behavior: none;
+  padding: 0;
+  margin: 0;
+  max-width: none;
+}
+
+body.celular.fija #mensaje { flex: none; margin: 8px 8px 0; }
+body.celular.fija #mensaje:empty { display: none; }
+
+body.celular.fija #vista-lobby:not([hidden]),
+body.celular.fija #vista-juego:not([hidden]) {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  gap: 8px;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+/* ---------- Lobby y pausa general en el celular ---------- */
+
+.cabecera { flex: none; }
+.cabecera p { margin: 4px 0 0; }
+.cabecera p:empty { display: none; }
+
+.pestanas { display: flex; gap: 4px; flex: none; }
+.pestanas[hidden] { display: none; }
+.pestanas button { flex: 1; }
+.pestanas button.activa { font-weight: bold; border-bottom: 3px solid #111; }
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.panel[hidden] { display: none; }
+
+/* Una fila compacta por control: nombre y dueño · sensor · botón */
+.filas {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  flex: 1 1 auto;
+  min-height: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.fila {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 9em) 4.8em;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.fila.mia { background: #f0f0f0; }
+.col-nombre { display: flex; flex-direction: column; min-width: 0; }
+.col-nombre small { color: #555; }
+.col-sensor { min-width: 0; width: 100%; }
+span.col-sensor { font-size: 0.9em; color: #555; }
+.fila button { padding: 4px; }
+.fila select { padding: 4px; }
+.col-nombre strong { line-height: 1.2; }
+.col-nombre small { line-height: 1.2; }
+
+.botones-ajustes { display: flex; gap: 6px; flex: none; }
+.botones-ajustes button { flex: 1; }
+
+.fila-ajuste {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 5.5em;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9em;
+}
+
+.fila-ajuste small { color: #555; }
+.fila-ajuste input[type=number] { width: 100%; box-sizing: border-box; }
+.fila-ajuste input[type=checkbox] { justify-self: end; width: 24px; height: 24px; }
+#lista-invertir, #lista-ajustes { display: flex; flex-direction: column; gap: 6px; }
+
+.pie { flex: none; display: flex; flex-direction: column; gap: 6px; }
+.pie p { margin: 0; min-height: 2.5em; font-size: 0.85em; }
+.boton-listo { min-height: 44px; font-size: 1.1em; }
+.boton-listo.activo { background: #111; color: #fff; }
+
+/* ---------- Partida en el celular ---------- */
+
+.teclas { display: flex; flex-wrap: wrap; gap: 8px; flex: none; }
 .grupo-teclas { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
 
 .tecla {
@@ -126,10 +227,16 @@ button.tactil {
 
 .tecla.activa { background: #111; color: #fff; }
 
-/* Zona del joystick virtual, dos dedos y doble toque */
+/* Tarjetas de controles con sensores: si no hay zona táctil, ocupan el espacio libre */
+#tarjetas { flex: 1 1 auto; min-height: 0; overflow: hidden; }
+#tarjetas:empty { flex: none; }
+#tarjetas .tarjeta { margin-bottom: 8px; }
+
+/* Zona del joystick virtual, dos dedos y doble toque: ocupa el resto de la pantalla */
 .zona-tactil {
   position: relative;
-  height: 55vh;
+  flex: 1 1 auto;
+  min-height: 0;
   border: 1px dashed #999;
   touch-action: none;
   user-select: none;
@@ -139,6 +246,7 @@ button.tactil {
 }
 
 .zona-tactil[hidden] { display: none; }
+#tarjetas:has(~ .zona-tactil:not([hidden])) { flex: none; }
 .zona-tactil p { padding: 8px; margin: 0; }
 
 .joystick-base, .joystick-perilla {
@@ -151,24 +259,32 @@ button.tactil {
 .joystick-base { width: 120px; height: 120px; border: 2px solid #999; }
 .joystick-perilla { width: 50px; height: 50px; background: #555; }
 
+/* Abajo: Mapa en la esquina izquierda, carrusel de armas a la derecha */
+.barra-inferior {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+}
+
+.barra-inferior:not(:has(:not([hidden]))) { display: none; }
+
+.boton-mapa { flex: 0 0 96px; }
+.boton-mapa[hidden] { display: none; }
+
 .carrusel {
   display: flex;
+  flex: 1 1 auto;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  margin: 8px 0;
 }
 
 .carrusel[hidden] { display: none; }
 .carrusel button.tactil { flex: 0 0 64px; }
-#arma-actual { min-width: 10em; text-align: center; }
+#arma-actual { flex: 1 1 auto; text-align: center; }
 
-/* Botón Mapa en la esquina inferior izquierda */
-.boton-mapa {
-  position: fixed;
-  left: 16px;
-  bottom: 16px;
-  width: 96px;
-}
+/* ---------- Jugadores en acción (PC) ---------- */
 
-.boton-mapa[hidden] { display: none; }
+.acciones { display: flex; flex-direction: column; gap: 6px; }
+.accion-jugador { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }

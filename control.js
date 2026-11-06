@@ -60,6 +60,9 @@
     ['vista-unirse', 'vista-lobby', 'vista-juego'].forEach(function (v) {
       $(v).hidden = v !== id;
     });
+    // Durante la partida la página ocupa toda la pantalla, sin scroll.
+    document.body.classList.toggle('fija', id === 'vista-juego' || id === 'vista-lobby');
+    window.scrollTo(0, 0);
   }
 
   function mensaje(texto, esError) {
@@ -210,12 +213,33 @@
     });
   }
 
+  // Lobby y pausa general, a pantalla completa: pestaña "Controles" (una
+  // fila compacta por control) y, en la pausa, pestaña "Ajustes".
+  var pestana = 'controles';
+
+  function mostrarPestana(nombre) {
+    pestana = nombre;
+    $('panel-controles').hidden = nombre !== 'controles';
+    $('panel-ajustes').hidden = nombre !== 'ajustes';
+    Array.prototype.forEach.call(document.querySelectorAll('#pestanas button'), function (b) {
+      b.classList.toggle('activa', b.getAttribute('data-pestana') === nombre);
+    });
+  }
+
+  // Una sola línea al pie con el gesto del control que se está mirando.
+  function mostrarAyuda(controlId, sensor) {
+    $('ayuda-control').textContent = D.control(controlId).corto + ' · ' + D.SENSORES[sensor] + ': ' +
+      D.descripcion(controlId, sensor);
+  }
+
   function dibujarLobby() {
     var enPausa = estado.fase === 'pausa';
     $('titulo-lobby').textContent = enPausa ? 'Pausa general' : 'Lobby';
     $('motivo-pausa').textContent = enPausa ? estado.motivoPausa || '' : '';
     $('lobby-sala').textContent = sala;
-    $('activar-sensores-p').hidden = !necesitaPermisoMovimiento || permisoMovimiento;
+    $('activar-sensores').hidden = !necesitaPermisoMovimiento || permisoMovimiento;
+    $('pestanas').hidden = !enPausa;
+    if (!enPausa && pestana !== 'controles') mostrarPestana('controles');
 
     var propias = asignacionesPropias();
     var lista = $('lista-controles');
@@ -224,22 +248,24 @@
     D.CONTROLES.forEach(function (c) {
       var a = duenoDe(c.id);
       var mio = a && a.jugador === miId;
-      var item = elemento('li');
-      item.appendChild(elemento('strong', c.nombre));
+      var fila = elemento('li', null, 'fila' + (mio ? ' mia' : ''));
+      var nombreCol = elemento('div', null, 'col-nombre');
+      nombreCol.appendChild(elemento('strong', c.corto));
+      var otro = a && !mio && estado.jugadores[a.jugador];
+      nombreCol.appendChild(elemento('small', !a ? 'Libre' : mio ? 'Tuyo' : (otro ? otro.nombre : 'Otro jugador')));
+      fila.appendChild(nombreCol);
 
       if (a && !mio) {
-        var otro = estado.jugadores[a.jugador];
-        item.appendChild(elemento('p', 'Lo tiene ' + (otro ? otro.nombre : 'otro jugador') +
-          ' (' + D.SENSORES[a.sensor] + ')'));
-        lista.appendChild(item);
+        fila.appendChild(elemento('span', D.SENSORES[a.sensor], 'col-sensor'));
+        fila.appendChild(elemento('span'));
+        fila.addEventListener('click', function () { mostrarAyuda(c.id, a.sensor); });
+        lista.appendChild(fila);
         return;
       }
 
-      item.appendChild(elemento('p', mio ? 'Tuyo · ' + D.SENSORES[a.sensor] : 'Libre'));
-
       // Sensores posibles: se deshabilitan los que el celular no tiene y
       // los que chocan con otro control propio.
-      var selector = elemento('select');
+      var selector = elemento('select', null, 'col-sensor');
       var primeroValido = null;
       c.sensores.forEach(function (s) {
         var opcion = elemento('option', D.SENSORES[s]);
@@ -250,7 +276,7 @@
           opcion.textContent += ' (no disponible)';
         } else if (choque) {
           opcion.disabled = true;
-          opcion.textContent += ' (mismo gesto que ' + D.control(choque).nombre + ')';
+          opcion.textContent += ' (mismo gesto que ' + D.control(choque).corto + ')';
         } else if (!primeroValido) {
           primeroValido = s;
         }
@@ -262,44 +288,46 @@
       })[0];
       selector.value = opcionPreferida || mio ? preferido : (primeroValido || c.sensores[0]);
 
-      var ayuda = elemento('p', D.descripcion(c.id, selector.value), 'aviso');
-      selector.addEventListener('change', function () {
-        ayuda.textContent = D.descripcion(c.id, selector.value);
-      });
-
-      var tomar = elemento('button', mio ? 'Cambiar sensor' : 'Tomar');
-      tomar.type = 'button';
-      tomar.disabled = !primeroValido && !mio;
-      tomar.addEventListener('click', function () {
+      function pedirControl() {
         var opcion = selector.options[selector.selectedIndex];
         if (!opcion || opcion.disabled) return;
         preferencias[c.id] = selector.value;
         D.guardar('doomy.preferencias', JSON.stringify(preferencias));
         pedir('elegir', { control: c.id, sensor: selector.value });
-      });
+      }
 
-      item.appendChild(selector);
-      item.appendChild(tomar);
+      selector.addEventListener('focus', function () { mostrarAyuda(c.id, selector.value); });
+      selector.addEventListener('change', function () {
+        mostrarAyuda(c.id, selector.value);
+        // Si el control ya es tuyo, el cambio de sensor se aplica al elegirlo.
+        if (mio) pedirControl();
+      });
+      fila.appendChild(selector);
+
+      var boton = elemento('button', mio ? 'Soltar' : 'Tomar');
+      boton.type = 'button';
       if (mio) {
-        var soltar = elemento('button', 'Soltar');
-        soltar.type = 'button';
-        soltar.addEventListener('click', function () {
+        boton.addEventListener('click', function () {
           delete preferencias[c.id];
           D.guardar('doomy.preferencias', JSON.stringify(preferencias));
           pedir('soltar', { control: c.id });
         });
-        item.appendChild(soltar);
+      } else {
+        boton.disabled = !primeroValido;
+        boton.addEventListener('click', function () {
+          mostrarAyuda(c.id, selector.value);
+          pedirControl();
+        });
       }
-      item.appendChild(ayuda);
-      lista.appendChild(item);
+      fila.appendChild(boton);
+      lista.appendChild(fila);
     });
 
-    $('ajustes').hidden = !enPausa;
     if (enPausa) dibujarAjustes(propias);
 
     var listo = estado.jugadores[miId].listo;
-    $('listo').textContent = listo ? 'Ya no estoy listo' : 'Estoy listo';
-    $('estado-listo').textContent = listo ? '✔ Listo, esperando a los demás' : '';
+    $('listo').textContent = listo ? '✔ Listo · tocar para cancelar' : 'Estoy listo';
+    $('listo').classList.toggle('activo', !!listo);
   }
 
   function alPresionarListo() {
@@ -347,7 +375,7 @@
     propias.forEach(function (p) {
       var c = D.control(p.control);
       if (c.tipo !== 'eje' || (p.sensor !== 'giroscopio' && p.sensor !== 'acelerometro')) return;
-      var etiqueta = elemento('label');
+      var etiqueta = elemento('label', null, 'fila-ajuste');
       var casilla = elemento('input');
       casilla.type = 'checkbox';
       casilla.checked = !!invertidos[c.id];
@@ -355,24 +383,32 @@
         invertidos[c.id] = casilla.checked;
         D.guardar('doomy.invertidos', JSON.stringify(invertidos));
       });
+      etiqueta.appendChild(elemento('span', 'Invertir ' + c.corto));
       etiqueta.appendChild(casilla);
-      etiqueta.appendChild(document.createTextNode(' Invertir dirección de ' + c.nombre));
-      invertir.appendChild(elemento('p')).appendChild(etiqueta);
+      invertir.appendChild(etiqueta);
     });
 
     var lista = $('lista-ajustes');
     lista.textContent = '';
     lecturasVisibles = [];
+    camposAjustes = [];
     D.AJUSTES.forEach(function (aj) {
       var aplica = propias.some(function (p) {
         return aj.sensores.indexOf(p.sensor) >= 0 && aj.controles.indexOf(p.control) >= 0;
       });
       if (!aplica) return;
-      var fila = elemento('p');
-      var etiqueta = elemento('label', aj.nombre + ' (' + aj.unidad + ') ');
+      var fila = elemento('label', null, 'fila-ajuste');
+      var texto = elemento('span');
+      texto.appendChild(document.createTextNode(aj.nombre + ' (' + aj.unidad + ')'));
+      if (aj.lectura) {
+        var actual = elemento('small', '');
+        texto.appendChild(actual);
+        lecturasVisibles.push({ elemento: actual, tipo: aj.lectura });
+      }
       var campo = elemento('input');
       campo.type = 'number';
       campo.step = 'any';
+      campo.inputMode = 'decimal';
       campo.value = ajuste(aj.id);
       campo.addEventListener('change', function () {
         var v = parseFloat(campo.value);
@@ -380,25 +416,23 @@
         ajustesGuardados[aj.id] = v;
         D.guardar('doomy.ajustes', JSON.stringify(ajustesGuardados));
       });
-      var porDefecto = elemento('button', 'Por defecto');
-      porDefecto.type = 'button';
-      porDefecto.addEventListener('click', function () {
-        delete ajustesGuardados[aj.id];
-        D.guardar('doomy.ajustes', JSON.stringify(ajustesGuardados));
-        campo.value = aj.valor;
-      });
-      etiqueta.appendChild(campo);
-      fila.appendChild(etiqueta);
-      fila.appendChild(porDefecto);
-      if (aj.lectura) {
-        var actual = elemento('span', '', 'aviso');
-        fila.appendChild(elemento('br'));
-        fila.appendChild(actual);
-        lecturasVisibles.push({ elemento: actual, tipo: aj.lectura });
-      }
+      camposAjustes.push({ campo: campo, ajuste: aj });
+      fila.appendChild(texto);
+      fila.appendChild(campo);
       lista.appendChild(fila);
     });
-    if (!lista.childNodes.length) lista.appendChild(elemento('p', 'Tus controles no tienen ajustes.', 'aviso'));
+    if (!lista.childNodes.length) lista.appendChild(elemento('p', 'Tus controles no tienen umbrales que ajustar.', 'aviso'));
+  }
+
+  var camposAjustes = [];
+
+  function restablecerAjustes() {
+    camposAjustes.forEach(function (c) {
+      delete ajustesGuardados[c.ajuste.id];
+      c.campo.value = c.ajuste.valor;
+    });
+    D.guardar('doomy.ajustes', JSON.stringify(ajustesGuardados));
+    mensaje('Umbrales restablecidos a los valores por defecto.');
   }
 
   // Muestra la lectura actual junto a cada ajuste para poder elegir el umbral.
@@ -407,17 +441,17 @@
     lecturasVisibles.forEach(function (l) {
       var t = '';
       if (l.tipo === 'inclinacion') {
-        t = 'Ahora: adelante ' + redondear(inclinacionAdelante()) + '° · lados ' + redondear(inclinacionLados()) + '°';
+        t = 'adelante ' + redondear(inclinacionAdelante()) + '° · lados ' + redondear(inclinacionLados()) + '°';
       } else if (l.tipo === 'giro') {
-        t = 'Último giro: ' + redondear(lectura.ultimoGiro) + ' °/s';
+        t = 'último giro ' + redondear(lectura.ultimoGiro) + ' °/s';
       } else if (l.tipo === 'aceleracion') {
-        t = 'Última aceleración: ' + redondear(lectura.ultimaAceleracion) + ' m/s²';
+        t = 'última aceleración ' + redondear(lectura.ultimaAceleracion) + ' m/s²';
       } else if (l.tipo === 'volumen') {
-        t = audio ? 'Ahora: ' + redondear(lectura.volumen) + ' dB' : 'Activa el micrófono con "Estoy listo"';
+        t = audio ? 'ahora ' + redondear(lectura.volumen) + ' dB' : 'activa el micrófono con "Estoy listo"';
       } else if (l.tipo === 'frecuencia') {
-        t = audio ? 'Ahora: ' + (lectura.frecuencia ? redondear(lectura.frecuencia) + ' Hz' : 'silencio') : 'Activa el micrófono con "Estoy listo"';
+        t = audio ? 'ahora ' + (lectura.frecuencia ? redondear(lectura.frecuencia) + ' Hz' : 'silencio') : 'activa el micrófono con "Estoy listo"';
       }
-      l.elemento.textContent = t;
+      l.elemento.textContent = t ? ' · ' + t : '';
     });
   }
 
@@ -715,10 +749,16 @@
     return null;
   }
 
+  // Sigue al dedo aunque salga del elemento. Si el navegador no lo permite,
+  // no debe impedir que se envíe la tecla.
+  function capturar(elemento, pointerId) {
+    try { if (elemento.setPointerCapture) elemento.setPointerCapture(pointerId); } catch (err) { /* sin captura */ }
+  }
+
   function alApoyar(e) {
     e.preventDefault();
     var zona = $('zona-tactil');
-    if (zona.setPointerCapture) zona.setPointerCapture(e.pointerId);
+    capturar(zona, e.pointerId);
     var ids = Object.keys(punteros);
     ids.forEach(function (id) { punteros[id].solo = false; });
     punteros[e.pointerId] = { x0: e.clientX, y0: e.clientY, x: e.clientX, y: e.clientY, t0: Date.now(), solo: !ids.length };
@@ -827,7 +867,7 @@
     var mapa = $('boton-mapa');
     mapa.addEventListener('pointerdown', function (e) {
       e.preventDefault();
-      if (mapa.setPointerCapture) mapa.setPointerCapture(e.pointerId);
+      capturar(mapa, e.pointerId);
       var st = tactil('mapa');
       if (st) enviar(st, 'Tab', true);
     });
@@ -938,6 +978,10 @@
     pedirPermisoMovimiento().then(function () { if (estado) dibujarLobby(); })
       .catch(function () { mensaje('No se dio permiso para usar los sensores de movimiento.', true); });
   });
+  Array.prototype.forEach.call(document.querySelectorAll('#pestanas button'), function (b) {
+    b.addEventListener('click', function () { mostrarPestana(b.getAttribute('data-pestana')); });
+  });
+  $('restablecer').addEventListener('click', restablecerAjustes);
   $('recalibrar').addEventListener('click', function () {
     calibrar();
     mensaje('Sensores recalibrados.');

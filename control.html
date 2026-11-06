@@ -26,29 +26,35 @@
 
   <!-- 2. Lobby y pausa general: elegir controles y sensores -->
   <section id="vista-lobby" hidden>
-    <h1 id="titulo-lobby">Lobby</h1>
-    <p id="motivo-pausa" class="error"></p>
-    <p>Sala <strong id="lobby-sala"></strong>. Elige qué controlas y con qué sensor.
-       Cada control tiene un solo dueño y no puedes tener dos controles con el mismo gesto.</p>
-    <p id="activar-sensores-p" hidden>
-      <button type="button" id="activar-sensores">Activar sensores de movimiento</button>
-    </p>
-    <ul id="lista-controles" class="controles"></ul>
+    <header class="cabecera">
+      <strong id="titulo-lobby">Lobby</strong> · Sala <strong id="lobby-sala"></strong>
+      <p id="motivo-pausa" class="error"></p>
+    </header>
 
-    <!-- Solo en la pausa general -->
-    <div id="ajustes" hidden>
-      <h2>Ajustes de tus sensores</h2>
-      <p><button type="button" id="recalibrar">Recalibrar sensores</button></p>
+    <!-- Pestañas: solo en la pausa general -->
+    <nav id="pestanas" class="pestanas" hidden>
+      <button type="button" data-pestana="controles" class="activa">Controles</button>
+      <button type="button" data-pestana="ajustes">Ajustes</button>
+    </nav>
+
+    <div id="panel-controles" class="panel">
+      <button type="button" id="activar-sensores" hidden>Activar sensores de movimiento</button>
+      <ul id="lista-controles" class="filas"></ul>
+    </div>
+
+    <div id="panel-ajustes" class="panel" hidden>
+      <div class="botones-ajustes">
+        <button type="button" id="recalibrar">Recalibrar</button>
+        <button type="button" id="restablecer">Valores por defecto</button>
+      </div>
       <div id="lista-invertir"></div>
       <div id="lista-ajustes"></div>
     </div>
 
-    <p>
-      <button type="button" id="listo">Estoy listo</button>
-      <span id="estado-listo"></span>
-    </p>
-    <p class="aviso">Al marcar "Estoy listo" se activan los sensores y se calibra la
-       posición neutral: sostén el celular como lo vas a usar.</p>
+    <footer class="pie">
+      <p id="ayuda-control" class="aviso">Toca un control para ver su gesto. No puedes tener dos controles con el mismo gesto.</p>
+      <button type="button" id="listo" class="boton-listo">Estoy listo</button>
+    </footer>
   </section>
 
   <!-- 3. Partida -->
@@ -63,13 +69,15 @@
       <p id="ayuda-tactil" class="aviso"></p>
     </div>
 
-    <div id="carrusel" class="carrusel" hidden>
-      <button type="button" id="arma-anterior" class="tactil">◀</button>
-      <span id="arma-actual"></span>
-      <button type="button" id="arma-siguiente" class="tactil">▶</button>
+    <!-- Abajo: Mapa en la esquina izquierda y el carrusel de armas -->
+    <div class="barra-inferior">
+      <button type="button" id="boton-mapa" class="boton-mapa tactil" hidden>Mapa</button>
+      <div id="carrusel" class="carrusel" hidden>
+        <button type="button" id="arma-anterior" class="tactil">◀</button>
+        <span id="arma-actual"></span>
+        <button type="button" id="arma-siguiente" class="tactil">▶</button>
+      </div>
     </div>
-
-    <button type="button" id="boton-mapa" class="boton-mapa tactil" hidden>Mapa</button>
   </section>
 
   <script src="https://unpkg.com/mqtt@5.10.1/dist/mqtt.min.js"></script>

@@ -82,6 +82,44 @@
     if (abajo) fuentes[fuente] = true; else delete fuentes[fuente];
     var ahora = Object.keys(fuentes).length > 0;
     if (antes !== ahora) enviarAlMotor(code, ahora);
+    if (fuente.indexOf('pc|') !== 0) pedirDibujoAcciones();
+  }
+
+  // ------------------------------------- lo que hace cada jugador (en el PC)
+
+  var dibujoAccionesPendiente = false;
+  function pedirDibujoAcciones() {
+    if (dibujoAccionesPendiente) return;
+    dibujoAccionesPendiente = true;
+    requestAnimationFrame(function () {
+      dibujoAccionesPendiente = false;
+      dibujarAcciones();
+    });
+  }
+
+  // Muestra, por jugador, sus controles y qué tecla está presionando cada uno.
+  function dibujarAcciones() {
+    var contenedor = $('acciones');
+    contenedor.textContent = '';
+    Object.keys(estado.jugadores).forEach(function (id) {
+      var fila = elemento('div');
+      fila.className = 'accion-jugador';
+      fila.appendChild(elemento('strong', estado.jugadores[id].nombre));
+      var propios = controlesDe(id);
+      if (!propios.length) fila.appendChild(elemento('span', ' sin controles'));
+      propios.forEach(function (c) {
+        var activas = c.teclas.filter(function (code) {
+          return presionadas[code] && presionadas[code][id + '|' + c.id];
+        });
+        var chip = elemento('span', c.nombre + (activas.length
+          ? ': ' + activas.map(function (code) { return D.NOMBRES_TECLAS[code] || code; }).join(' ')
+          : ''));
+        chip.className = activas.length ? 'tecla activa' : 'tecla';
+        chip.title = D.SENSORES[estado.asignacion[c.id].sensor];
+        fila.appendChild(chip);
+      });
+      contenedor.appendChild(fila);
+    });
   }
 
   // Suelta las teclas cuyas fuentes cumplan la condición.
@@ -343,6 +381,8 @@
     if (estado.fase !== 'juego') return;
     estado.fase = 'pausa';
     estado.motivoPausa = motivo || 'Pausa abierta desde el PC.';
+    // Todos deben volver a confirmar (y recalibrar) antes de continuar.
+    Object.keys(estado.jugadores).forEach(function (id) { estado.jugadores[id].listo = false; });
     soltarCelulares();
     soltarSi(function (f) { return f[0] === 'pc'; });
     pausarMotor(true);
@@ -456,6 +496,7 @@
     $('continuar').hidden = D.leer('doomy.autoguardado') !== '1';
     $('continuar').disabled = !!motivo;
 
+    dibujarAcciones();
     $('pausa').hidden = estado.fase !== 'pausa';
     $('motivo-pausa').textContent = estado.motivoPausa;
     $('reanudar').disabled = !!motivo;

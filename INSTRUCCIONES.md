@@ -82,7 +82,10 @@ pestaña: los controles táctiles funcionan con el mouse (un solo "dedo").
 1. **PC**: abre la página. Aparece la sala (código de 5 letras) y un QR.
 2. **Celulares**: escanean el QR, escriben su nombre y entran al lobby.
 3. **Lobby (en el celular)**: cada jugador toma controles y elige con qué sensor.
+   La pantalla del celular ocupa toda la pantalla, sin scroll: una fila por control
+   (nombre y dueño · sensor · Tomar / Soltar) y, al pie, el gesto del control elegido.
    - Cada control tiene un solo dueño.
+   - En un control que ya es tuyo, al elegir otro sensor en la lista el cambio se aplica de inmediato.
    - Un celular puede tener varios controles, pero **no dos con el mismo gesto**
      (ver la tabla del punto 6). Los sensores que el celular no tiene no aparecen disponibles.
 4. Cada jugador presiona **"Estoy listo"**: se piden permisos (sensores, micrófono) y se
@@ -103,19 +106,25 @@ pestaña: los controles táctiles funcionan con el mouse (un solo "dedo").
 | **Espacio** | Abre / cierra la **pausa general** |
 
 Con el menú cerrado, el teclado del PC no mueve al personaje: eso es solo de los celulares.
-Mientras el menú está abierto, los celulares no envían nada.
+Mientras el menú está abierto, los celulares no envían nada. Ojo: en la pantalla de título
+de DOOM cualquier tecla (también la de un celular) abre el menú; Espacio no abre la pausa
+mientras el menú está abierto.
+
+Bajo el juego, el PC muestra **Jugadores en acción**: cada jugador con sus controles,
+resaltando en vivo la tecla que está presionando cada uno.
 
 ### Pausa general
 
 Se abre con **Espacio** en el PC, o sola cuando un jugador se desconecta.
 
-- DOOM se detiene.
-- En los celulares vuelve la lista de controles: se pueden tomar los que quedaron
-  libres, soltar o cambiar los propios.
-- Cada celular ve **Ajustes de sus sensores**: recalibrar, invertir dirección y
-  umbrales (con la lectura actual del sensor al lado, para elegir el valor).
+- DOOM se detiene y **todos pasan a "no listo"**.
+- En los celulares aparecen dos pestañas:
+  - **Controles**: tomar los que quedaron libres, soltar o cambiar el sensor de los propios.
+  - **Ajustes**: recalibrar, invertir dirección, volver a los valores por defecto y
+    umbrales (con la lectura actual del sensor al lado, para elegir el valor).
+- Cada jugador presiona **"Estoy listo"** (se recalibra con la posición de ese momento).
 - Para continuar (Espacio o botón **Continuar**), todos los controles deben tener
-  dueño y todos deben estar listos.
+  dueño y todos deben estar listos. Al continuar, cada celular muestra sus controles nuevos.
 - **Volver al lobby** guarda la partida automáticamente (ranura 6 del menú de DOOM,
   "AUTOGUARDADO") y vuelve al lobby con los mismos jugadores y controles.
 

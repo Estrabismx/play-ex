@@ -19,35 +19,35 @@
   // El menú de DOOM ya no es un control: se maneja con el teclado del PC.
   var CONTROLES = [
     {
-      id: 'mover', nombre: 'Moverse (avanzar / retroceder)', tipo: 'eje',
+      id: 'mover', nombre: 'Moverse (avanzar / retroceder)', corto: 'Moverse', tipo: 'eje',
       teclas: ['ArrowUp', 'ArrowDown'], etiquetas: ['Avanzar', 'Retroceder'],
       sensores: ['giroscopio', 'acelerometro', 'tactil', 'microfono']
     },
     {
       // Usa los gestos de "moverse lateralmente", pero en el juego gira.
-      id: 'lateral', nombre: 'Moverse lateralmente (girar)', tipo: 'eje',
+      id: 'lateral', nombre: 'Moverse lateralmente (girar)', corto: 'Lateral (girar)', tipo: 'eje',
       teclas: ['ArrowLeft', 'ArrowRight'], etiquetas: ['Izquierda', 'Derecha'],
       sensores: ['giroscopio', 'acelerometro', 'tactil', 'microfono']
     },
     {
-      id: 'disparar', nombre: 'Disparar', tipo: 'boton', duracion: 400,
+      id: 'disparar', nombre: 'Disparar', corto: 'Disparar', tipo: 'boton', duracion: 400,
       teclas: ['ControlRight'], sensores: ['giroscopio', 'acelerometro', 'tactil', 'microfono']
     },
     {
-      id: 'usar', nombre: 'Abrir puertas / usar', tipo: 'boton', duracion: 200,
+      id: 'usar', nombre: 'Abrir puertas / usar', corto: 'Usar', tipo: 'boton', duracion: 200,
       teclas: ['Space'], sensores: ['giroscopio', 'acelerometro', 'tactil', 'microfono']
     },
     {
-      id: 'correr', nombre: 'Correr', tipo: 'boton',
+      id: 'correr', nombre: 'Correr', corto: 'Correr', tipo: 'boton',
       teclas: ['ShiftRight'], sensores: ['giroscopio', 'acelerometro', 'tactil', 'microfono']
     },
     {
-      id: 'arma', nombre: 'Cambiar arma', tipo: 'arma',
+      id: 'arma', nombre: 'Cambiar arma', corto: 'Arma', tipo: 'arma',
       teclas: ['Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7'],
       sensores: ['tactil']
     },
     {
-      id: 'mapa', nombre: 'Mapa', tipo: 'boton', duracion: 150,
+      id: 'mapa', nombre: 'Mapa', corto: 'Mapa', tipo: 'boton', duracion: 150,
       teclas: ['Tab'], sensores: ['tactil', 'microfono']
     }
   ];
