@@ -14,11 +14,14 @@
 //-----------------------------------------------------------------------------
 
 #include <string.h>
-#include <emscripten.h>
 
 #include "doomdef.h"
 #include "doomstat.h"
 #include "s_sound.h"
+
+// Va después de los headers de DOOM: emscripten.h define true/false como
+// macros, lo que rompe el "typedef enum {false, true} boolean" de doomtype.h.
+#include <emscripten.h>
 
 // Definidos en m_menu.c y g_game.c.
 extern boolean	menuactive;

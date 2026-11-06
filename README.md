@@ -267,7 +267,7 @@ Cambios aplicados respecto de v01: 7 controles (Girar se reemplazó por "Moverse
 
 Elementos a mejorar:
 
-1. **Recompilar el motor.** La pausa que detiene a DOOM, el autoguardado y la detección del menú dependen de `doomy_web.c`; mientras no se recompile con Emscripten, la página funciona en un modo aproximado (lo avisa en pantalla). El código C nuevo todavía no se ha compilado ni probado.
+1. **Motor recompilado (Emscripten 6.0.13).** Se probó en Edge que `doomy_web.c` detecta el menú, la escritura del nombre de partida y la partida en curso; que la pausa detiene el juego; y que el autoguardado se escribe y se carga con "Continuar partida guardada". Si se cambia el código C hay que volver a compilar con `doom/build-web.sh`.
 2. **Probar en celulares reales.** La lógica de sala, lobby, conflictos, inputs y pausa se probó con el broker real en un navegador simulado, pero los sensores, el micrófono y los gestos táctiles no se han probado en dispositivos; los valores por defecto son estimaciones.
 3. **Tablas del README desactualizadas.** Las tablas de mapeo siguen diciendo "desplazamiento lateral" y "Girar: no habilitado"; en el juego, "Moverse lateralmente" ahora gira. Conviene ajustar el texto, y los valores _n0_–_n4_ ya están definidos en `INSTRUCCIONES.md`.
 4. **Micrófono.** Los dB son relativos al micrófono de cada celular (no dB reales), la frecuencia se estima con el pico del espectro (la voz tiene armónicos y puede fallar) y "usar" se activa con cualquier sonido suave cada 0,6 s. Además, la regla de gestos permite en un mismo celular un control por volumen y otro por frecuencia, que reaccionan al mismo sonido.
@@ -276,5 +276,5 @@ Elementos a mejorar:
 7. **Autoguardado en la ranura 6.** Sobrescribe lo que los jugadores hayan guardado en esa ranura del menú de DOOM.
 8. **Volver al lobby recarga el PC.** Los celulares ven "sala cerrada" un momento y se reconectan solos; si se cierra la pestaña del PC en vez de usar el botón, no hay autoguardado.
 9. **Jugadores que entran a mitad de partida** quedan sin controles hasta la próxima pausa general; el PC solo lo muestra en el registro.
-10. **Menú del PC sin el motor recompilado.** Se adivina si el menú está abierto contando los Esc; al elegir "New Game" el menú se cierra solo y puede desincronizarse.
+10. **Modo aproximado del menú.** Si alguien publica un `doom.js` sin `doomy_web.c`, la página adivina si el menú está abierto contando los Esc y puede desincronizarse; conviene mantener siempre el motor recompilado.
 11. **"Qué NO debe ocurrir"** sigue vacío en el README; completarlo ayudaría a definir pruebas.
