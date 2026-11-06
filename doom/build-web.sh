@@ -29,7 +29,7 @@ FILES="doomdef doomstat dstrings i_system i_sound_web i_video_web i_net
        p_pspr p_setup p_sight p_spec p_switch p_mobj p_telept p_tick
        p_saveg p_user r_bsp r_data r_draw r_main r_plane r_segs r_sky
        r_things w_wad wi_stuff v_video st_lib st_stuff hu_stuff hu_lib
-       s_sound z_zone info sounds i_main"
+       s_sound z_zone info sounds i_main doomy_web"
 
 SOURCES=""
 for f in $FILES; do

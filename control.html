@@ -8,11 +8,11 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="celular">
-  <h1>Doomy plays DOOM</h1>
   <p id="mensaje" class="aviso"></p>
 
   <!-- 1. Unirse a una sala -->
   <section id="vista-unirse">
+    <h1>Doomy plays DOOM</h1>
     <form id="form-unirse">
       <p>
         <label>Sala<br><input id="sala" autocomplete="off" autocapitalize="characters" maxlength="8" required></label>
@@ -24,12 +24,25 @@
     </form>
   </section>
 
-  <!-- 2. Lobby: elegir controles y sensores -->
+  <!-- 2. Lobby y pausa general: elegir controles y sensores -->
   <section id="vista-lobby" hidden>
-    <h2>Sala <span id="lobby-sala"></span></h2>
-    <p>Elige qué controlas y con qué sensor. Cada control tiene un solo dueño y
-       la partida no empieza hasta que todos estén elegidos.</p>
+    <h1 id="titulo-lobby">Lobby</h1>
+    <p id="motivo-pausa" class="error"></p>
+    <p>Sala <strong id="lobby-sala"></strong>. Elige qué controlas y con qué sensor.
+       Cada control tiene un solo dueño y no puedes tener dos controles con el mismo gesto.</p>
+    <p id="activar-sensores-p" hidden>
+      <button type="button" id="activar-sensores">Activar sensores de movimiento</button>
+    </p>
     <ul id="lista-controles" class="controles"></ul>
+
+    <!-- Solo en la pausa general -->
+    <div id="ajustes" hidden>
+      <h2>Ajustes de tus sensores</h2>
+      <p><button type="button" id="recalibrar">Recalibrar sensores</button></p>
+      <div id="lista-invertir"></div>
+      <div id="lista-ajustes"></div>
+    </div>
+
     <p>
       <button type="button" id="listo">Estoy listo</button>
       <span id="estado-listo"></span>
@@ -38,10 +51,25 @@
        posición neutral: sostén el celular como lo vas a usar.</p>
   </section>
 
-  <!-- 3. Partida: indicadores y botones de los controles propios -->
+  <!-- 3. Partida -->
   <section id="vista-juego" hidden>
-    <div id="mis-controles"></div>
-    <p><button type="button" id="recalibrar">Recalibrar sensores</button></p>
+    <div id="teclas" class="teclas"></div>
+    <div id="tarjetas"></div>
+
+    <!-- Pantalla táctil: joystick virtual, dos dedos y doble toque -->
+    <div id="zona-tactil" class="zona-tactil" hidden>
+      <div id="joystick-base" class="joystick-base" hidden></div>
+      <div id="joystick-perilla" class="joystick-perilla" hidden></div>
+      <p id="ayuda-tactil" class="aviso"></p>
+    </div>
+
+    <div id="carrusel" class="carrusel" hidden>
+      <button type="button" id="arma-anterior" class="tactil">◀</button>
+      <span id="arma-actual"></span>
+      <button type="button" id="arma-siguiente" class="tactil">▶</button>
+    </div>
+
+    <button type="button" id="boton-mapa" class="boton-mapa tactil" hidden>Mapa</button>
   </section>
 
   <script src="https://unpkg.com/mqtt@5.10.1/dist/mqtt.min.js"></script>

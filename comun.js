@@ -1,95 +1,145 @@
 // Definiciones compartidas por la pantalla del PC (main.js) y el control
-// del celular (control.js): controles, sensores, temas MQTT y conexión.
+// del celular (control.js): controles, sensores, gestos, temas MQTT y conexión.
 
 (function () {
   'use strict';
 
-  var MAX_JUGADORES = 5;
+  var MAX_JUGADORES = 7;
 
   var SENSORES = {
     giroscopio: 'Giroscopio',
     acelerometro: 'Acelerómetro',
-    tactil: 'Pantalla táctil'
+    tactil: 'Pantalla táctil',
+    microfono: 'Micrófono'
   };
 
   // Controles de la partida. "teclas" son los KeyboardEvent.code que el PC
   // envía al motor de DOOM. En los ejes, teclas[0] corresponde a
-  // etiquetas[0] (valor positivo) y teclas[1] a etiquetas[1] (negativo).
+  // etiquetas[0] y teclas[1] a etiquetas[1].
+  // El menú de DOOM ya no es un control: se maneja con el teclado del PC.
   var CONTROLES = [
     {
-      id: 'mover', nombre: 'Moverse', tipo: 'eje',
+      id: 'mover', nombre: 'Moverse (avanzar / retroceder)', tipo: 'eje',
       teclas: ['ArrowUp', 'ArrowDown'], etiquetas: ['Avanzar', 'Retroceder'],
-      sensores: ['giroscopio', 'acelerometro', 'tactil']
+      sensores: ['giroscopio', 'acelerometro', 'tactil', 'microfono']
     },
     {
-      id: 'girar', nombre: 'Girar', tipo: 'eje',
+      // Usa los gestos de "moverse lateralmente", pero en el juego gira.
+      id: 'lateral', nombre: 'Moverse lateralmente (girar)', tipo: 'eje',
       teclas: ['ArrowLeft', 'ArrowRight'], etiquetas: ['Izquierda', 'Derecha'],
-      sensores: ['giroscopio', 'acelerometro', 'tactil']
+      sensores: ['giroscopio', 'acelerometro', 'tactil', 'microfono']
     },
     {
-      id: 'lateral', nombre: 'Desplazarse lateralmente', tipo: 'eje',
-      teclas: ['Comma', 'Period'], etiquetas: ['Izquierda', 'Derecha'],
-      sensores: ['giroscopio', 'acelerometro', 'tactil']
+      id: 'disparar', nombre: 'Disparar', tipo: 'boton', duracion: 400,
+      teclas: ['ControlRight'], sensores: ['giroscopio', 'acelerometro', 'tactil', 'microfono']
     },
     {
-      id: 'disparar', nombre: 'Disparar', tipo: 'boton', accion: 'pulso', duracion: 400,
-      teclas: ['ControlRight'], sensores: ['tactil', 'acelerometro', 'giroscopio']
+      id: 'usar', nombre: 'Abrir puertas / usar', tipo: 'boton', duracion: 200,
+      teclas: ['Space'], sensores: ['giroscopio', 'acelerometro', 'tactil', 'microfono']
     },
     {
-      id: 'usar', nombre: 'Abrir puertas / usar', tipo: 'boton', accion: 'pulso', duracion: 200,
-      teclas: ['Space'], sensores: ['tactil', 'acelerometro', 'giroscopio']
-    },
-    {
-      id: 'correr', nombre: 'Correr', tipo: 'boton', accion: 'alternar',
-      teclas: ['ShiftRight'], sensores: ['tactil', 'acelerometro', 'giroscopio']
+      id: 'correr', nombre: 'Correr', tipo: 'boton',
+      teclas: ['ShiftRight'], sensores: ['giroscopio', 'acelerometro', 'tactil', 'microfono']
     },
     {
       id: 'arma', nombre: 'Cambiar arma', tipo: 'arma',
       teclas: ['Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7'],
-      sensores: ['tactil', 'acelerometro', 'giroscopio']
-    },
-    {
-      id: 'mapa', nombre: 'Mapa', tipo: 'boton', accion: 'pulso', duracion: 150,
-      teclas: ['Tab'], sensores: ['tactil', 'acelerometro', 'giroscopio']
-    },
-    {
-      id: 'menu', nombre: 'Menú', tipo: 'menu',
-      // Navegación del menú + letras para escribir el nombre de una partida guardada.
-      teclas: ['Escape', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter',
-               'KeyY', 'KeyN', 'Backspace', 'KeyD', 'KeyO', 'KeyM'],
       sensores: ['tactil']
+    },
+    {
+      id: 'mapa', nombre: 'Mapa', tipo: 'boton', duracion: 150,
+      teclas: ['Tab'], sensores: ['tactil', 'microfono']
     }
   ];
 
-  // Cómo se maneja cada control con cada sensor (se muestra en el celular).
-  // Mapeo provisorio: la tabla definitiva se documentará en el README.
-  var DESCRIPCIONES = {
-    'mover/giroscopio': 'Inclina la parte de arriba del celular hacia adelante para avanzar y hacia ti para retroceder.',
-    'mover/acelerometro': 'Igual que el giroscopio pero calculado con la gravedad: inclina hacia adelante / hacia ti.',
-    'mover/tactil': 'Mantén presionado Avanzar o Retroceder.',
-    'girar/giroscopio': 'Inclina el celular hacia la izquierda o la derecha (como un volante).',
-    'girar/acelerometro': 'Igual que el giroscopio pero calculado con la gravedad: inclina a izquierda / derecha.',
-    'girar/tactil': 'Mantén presionado Izquierda o Derecha.',
-    'lateral/giroscopio': 'Gira el celular sobre sí mismo, como girando una perilla, a izquierda o derecha.',
-    'lateral/acelerometro': 'Mueve el celular de golpe hacia la izquierda o la derecha.',
-    'lateral/tactil': 'Mantén presionado Izquierda o Derecha.',
-    'disparar/tactil': 'Mantén presionado el botón para disparar.',
-    'disparar/acelerometro': 'Sacude el celular para disparar.',
-    'disparar/giroscopio': 'Gira el celular bruscamente para disparar.',
-    'usar/tactil': 'Toca el botón para abrir puertas o activar interruptores.',
-    'usar/acelerometro': 'Sacude el celular para usar.',
-    'usar/giroscopio': 'Gira el celular bruscamente para usar.',
-    'correr/tactil': 'Mantén presionado el botón para correr.',
-    'correr/acelerometro': 'Sacude el celular para empezar o dejar de correr.',
-    'correr/giroscopio': 'Gira el celular bruscamente para empezar o dejar de correr.',
-    'arma/tactil': 'Toca el número del arma (1 a 7).',
-    'arma/acelerometro': 'Sacude el celular para pasar a la siguiente arma.',
-    'arma/giroscopio': 'Gira el celular bruscamente para pasar a la siguiente arma.',
-    'mapa/tactil': 'Toca el botón para abrir o cerrar el mapa.',
-    'mapa/acelerometro': 'Sacude el celular para abrir o cerrar el mapa.',
-    'mapa/giroscopio': 'Gira el celular bruscamente para abrir o cerrar el mapa.',
-    'menu/tactil': 'Botones para abrir el menú, moverse por él, aceptar y responder Sí / No.'
+  // Nombre corto de cada tecla para los indicadores del celular.
+  var NOMBRES_TECLAS = {
+    ArrowUp: '↑', ArrowDown: '↓', ArrowLeft: '←', ArrowRight: '→',
+    ControlRight: 'Ctrl', Space: 'Espacio', ShiftRight: 'Shift', Tab: 'Tab',
+    Digit1: '1', Digit2: '2', Digit3: '3', Digit4: '4', Digit5: '5', Digit6: '6', Digit7: '7'
   };
+
+  var ARMAS = ['Puño / motosierra', 'Pistola', 'Escopeta', 'Ametralladora',
+               'Lanzacohetes', 'Rifle de plasma', 'BFG 9000'];
+
+  // Gesto físico de cada combinación control/sensor. Un mismo celular no
+  // puede tener dos controles que compartan un gesto (se activarían juntos).
+  var GESTOS = {
+    'mover/giroscopio': ['inclinar-adelante'],
+    'mover/acelerometro': ['inclinar-adelante'],
+    'mover/microfono': ['frecuencia'],
+    'lateral/giroscopio': ['inclinar-lados'],
+    'lateral/acelerometro': ['inclinar-lados'],
+    'lateral/microfono': ['volumen'],
+    'disparar/giroscopio': ['inclinar-lados', 'brusco'],
+    'disparar/acelerometro': ['brusco'],
+    'disparar/microfono': ['volumen'],
+    'usar/giroscopio': ['inclinar-adelante', 'brusco'],
+    'usar/acelerometro': ['brusco'],
+    'usar/microfono': ['volumen'],
+    'correr/giroscopio': ['inclinar-adelante'],
+    'correr/acelerometro': ['inclinar-adelante'],
+    'correr/microfono': ['volumen'],
+    'mapa/microfono': ['frecuencia']
+    // Pantalla táctil: sus gestos están pensados para usarse a la vez.
+  };
+
+  // Devuelve el control (de "propios": [{control, sensor}]) que choca con
+  // elegir controlId/sensor, o null si no hay conflicto.
+  function conflicto(propios, controlId, sensor) {
+    var gestos = GESTOS[controlId + '/' + sensor] || [];
+    for (var i = 0; i < propios.length; i++) {
+      var p = propios[i];
+      if (p.control === controlId) continue;
+      var otros = GESTOS[p.control + '/' + p.sensor] || [];
+      if (gestos.some(function (g) { return otros.indexOf(g) >= 0; })) return p.control;
+    }
+    return null;
+  }
+
+  // Cómo se maneja cada control con cada sensor (se muestra en el celular).
+  var DESCRIPCIONES = {
+    'mover/giroscopio': 'Inclina el celular hacia adelante para avanzar y hacia atrás para retroceder.',
+    'mover/acelerometro': 'Inclina el celular hacia adelante o hacia atrás (medido con la gravedad).',
+    'mover/tactil': 'Joystick virtual: apoya un dedo en cualquier parte y deslízalo hacia arriba o abajo.',
+    'mover/microfono': 'Haz sonar una nota dentro del rango de frecuencias para avanzar; fuera del rango retrocedes. En silencio te detienes.',
+    'lateral/giroscopio': 'Inclina el celular hacia los lados para girar.',
+    'lateral/acelerometro': 'Inclina el celular hacia los lados para girar (medido con la gravedad).',
+    'lateral/tactil': 'Joystick virtual: apoya un dedo en cualquier parte y deslízalo a izquierda o derecha.',
+    'lateral/microfono': 'Sonido fuerte: gira a la derecha. Sonido suave: gira a la izquierda. En silencio no gira.',
+    'disparar/giroscopio': 'Haz un giro rápido y breve del celular hacia un lado.',
+    'disparar/acelerometro': 'Haz un movimiento rápido con el celular.',
+    'disparar/tactil': 'Apoya un segundo dedo en la pantalla (también mientras usas el joystick).',
+    'disparar/microfono': 'Grita: dispara mientras el sonido supere el umbral.',
+    'usar/giroscopio': 'Haz un giro rápido y breve del celular hacia adelante o atrás.',
+    'usar/acelerometro': 'Mueve el celular rápido hacia adelante o hacia atrás.',
+    'usar/tactil': 'Toca dos veces en el mismo lugar (en menos de 0,9 s).',
+    'usar/microfono': 'Haz un sonido suave (más fuerte que el ruido, más bajo que un grito).',
+    'correr/giroscopio': 'Inclina mucho el celular hacia adelante.',
+    'correr/acelerometro': 'Inclina mucho el celular hacia adelante (medido con la gravedad).',
+    'correr/tactil': 'Desliza dos dedos juntos hacia arriba.',
+    'correr/microfono': 'Haz un sonido fuerte: corres mientras dure.',
+    'arma/tactil': 'Carrusel ◀ [arma] ▶: cada toque selecciona la anterior o la siguiente.',
+    'mapa/tactil': 'Botón Mapa (esquina inferior izquierda): abre o cierra el mapa.',
+    'mapa/microfono': 'Haz un sonido grave para abrir o cerrar el mapa.'
+  };
+
+  // Umbrales por defecto: cada celular los puede cambiar en la pausa general.
+  var AJUSTES = [
+    { id: 'inclinacion', nombre: 'Inclinación para moverse / girar', unidad: '°', valor: 15, sensores: ['giroscopio', 'acelerometro'], controles: ['mover', 'lateral'], lectura: 'inclinacion' },
+    { id: 'inclinacionCorrer', nombre: 'Inclinación para correr', unidad: '°', valor: 35, sensores: ['giroscopio', 'acelerometro'], controles: ['correr'], lectura: 'inclinacion' },
+    { id: 'giroBrusco', nombre: 'Velocidad del giro rápido', unidad: '°/s', valor: 250, sensores: ['giroscopio'], controles: ['disparar', 'usar'], lectura: 'giro' },
+    { id: 'confirmacion', nombre: 'Aceleración que confirma el giro rápido', unidad: 'm/s²', valor: 4, sensores: ['giroscopio'], controles: ['disparar', 'usar'], lectura: 'aceleracion' },
+    { id: 'movimientoBrusco', nombre: 'Aceleración del movimiento rápido', unidad: 'm/s²', valor: 12, sensores: ['acelerometro'], controles: ['disparar', 'usar'], lectura: 'aceleracion' },
+    { id: 'micPiso', nombre: 'Ruido de fondo (bajo esto es silencio)', unidad: 'dB', valor: -50, sensores: ['microfono'], controles: ['mover', 'lateral', 'usar', 'mapa'], lectura: 'volumen' },
+    { id: 'micMedio', nombre: 'Límite suave / fuerte para girar', unidad: 'dB', valor: -30, sensores: ['microfono'], controles: ['lateral'], lectura: 'volumen' },
+    { id: 'micCorrer', nombre: 'Sonido fuerte para correr', unidad: 'dB', valor: -20, sensores: ['microfono'], controles: ['correr'], lectura: 'volumen' },
+    { id: 'micDisparo', nombre: 'Grito para disparar (y techo de "usar")', unidad: 'dB', valor: -12, sensores: ['microfono'], controles: ['disparar', 'usar'], lectura: 'volumen' },
+    { id: 'frecMin', nombre: 'Frecuencia mínima para avanzar', unidad: 'Hz', valor: 250, sensores: ['microfono'], controles: ['mover'], lectura: 'frecuencia' },
+    { id: 'frecMax', nombre: 'Frecuencia máxima para avanzar', unidad: 'Hz', valor: 800, sensores: ['microfono'], controles: ['mover'], lectura: 'frecuencia' },
+    { id: 'frecGrave', nombre: 'Sonido grave para el mapa (bajo esto)', unidad: 'Hz', valor: 150, sensores: ['microfono'], controles: ['mapa'], lectura: 'frecuencia' },
+    { id: 'zonaMuerta', nombre: 'Zona muerta del joystick', unidad: 'px', valor: 30, sensores: ['tactil'], controles: ['mover', 'lateral'], lectura: null }
+  ];
 
   function control(id) {
     for (var i = 0; i < CONTROLES.length; i++) {
@@ -110,8 +160,8 @@
   function temas(sala) {
     var base = window.DOOMY_CONFIG.temaBase + '/' + sala;
     return {
-      estado: base + '/estado',      // PC -> celulares (retenido): lobby y asignaciones
-      host: base + '/host',          // celulares -> PC: unirse, elegir, listo, ping, salir
+      estado: base + '/estado',      // PC -> celulares (retenido): fase, jugadores y asignaciones
+      host: base + '/host',          // celulares -> PC: unirse, elegir, soltar, listo, ping, salir
       input: base + '/input',        // celulares -> PC: teclas presionadas / soltadas
       jugador: function (id) {       // PC -> un celular: mensajes directos
         return base + '/jugador/' + id;
@@ -168,7 +218,11 @@
     MAX_JUGADORES: MAX_JUGADORES,
     SENSORES: SENSORES,
     CONTROLES: CONTROLES,
+    NOMBRES_TECLAS: NOMBRES_TECLAS,
+    ARMAS: ARMAS,
+    AJUSTES: AJUSTES,
     control: control,
+    conflicto: conflicto,
     descripcion: descripcion,
     limpiarSala: limpiarSala,
     temas: temas,

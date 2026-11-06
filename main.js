@@ -1,17 +1,28 @@
 // Pantalla del PC: crea la sala, coordina el lobby por MQTT y corre DOOM.
 //
 // El PC es la autoridad: los celulares piden controles y el PC decide.
-// Cuando empieza la partida, cada mensaje de input de un celular se valida
+// Durante la partida, cada mensaje de input de un celular se valida
 // (¿ese jugador es dueño de ese control? ¿esa tecla es de ese control?) y
 // se traduce en un KeyboardEvent sintético que el motor de DOOM escucha.
+//
+// El teclado del PC solo maneja el menú de DOOM (Esc, flechas/WASD, Enter,
+// Y/N) y la pausa general (Espacio). Para saber si el menú está abierto se
+// usan las funciones que agrega doom/linuxdoom-1.10/doomy_web.c.
 
 (function () {
   'use strict';
 
   var D = window.DOOMY;
   var $ = function (id) { return document.getElementById(id); };
+  var todos = function (selector) { return Array.prototype.slice.call(document.querySelectorAll(selector)); };
 
   var TIEMPO_SIN_SENAL = 8000;   // ms sin ping para dar por desconectado a un celular
+
+  // Bits de Module._doomy_estado() (ver doomy_web.c).
+  var MENU_ABIERTO = 1, ESCRIBIENDO = 2, EN_NIVEL = 8;
+
+  var TECLAS_MENU = ['Escape', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter', 'KeyY', 'KeyN', 'Backspace'];
+  var WASD = { KeyW: 'ArrowUp', KeyA: 'ArrowLeft', KeyS: 'ArrowDown', KeyD: 'ArrowRight' };
 
   // ---------------------------------------------------------------- sala
 
@@ -24,24 +35,29 @@
   D.guardar('doomy.sala', sala);
   var T = D.temas(sala);
 
-  // fase: 'lobby' | 'juego'
+  // fase: 'lobby' | 'juego' | 'pausa'
   // jugadores[id] = { nombre, listo, visto }
   // asignacion[controlId] = { jugador, sensor }
-  var estado = { fase: 'lobby', jugadores: {}, asignacion: {} };
+  var estado = { fase: 'lobby', jugadores: {}, asignacion: {}, motivoPausa: '' };
+
+  // Al "volver al lobby" la página se recarga: se recuperan jugadores y controles.
+  (function recuperarLobby() {
+    var guardado;
+    try { guardado = JSON.parse(sessionStorage.getItem('doomy.lobby')); sessionStorage.removeItem('doomy.lobby'); } catch (e) { guardado = null; }
+    if (!guardado || guardado.sala !== sala) return;
+    Object.keys(guardado.jugadores || {}).forEach(function (id) {
+      estado.jugadores[id] = { nombre: guardado.jugadores[id].nombre, listo: false, visto: Date.now() };
+    });
+    estado.asignacion = guardado.asignacion || {};
+  })();
 
   var cliente = null;
   var motorListo = false;
+  var motorCompleto = false;   // el motor tiene las funciones de doomy_web.c
+  var menuAbierto = false;
+  var menuSupuesto = false;    // si el motor no tiene doomy_web.c: se adivina con Esc
 
-  // ------------------------------------------------------------- teclado
-
-  // Mientras se juega, el teclado físico del PC no llega al motor:
-  // solo pasan los eventos sintéticos (isTrusted = false) de los celulares.
-  // Se registra antes de cargar doom.js para ejecutarse antes que el motor.
-  ['keydown', 'keyup', 'keypress'].forEach(function (tipo) {
-    window.addEventListener(tipo, function (e) {
-      if (e.isTrusted && estado.fase === 'juego') e.stopImmediatePropagation();
-    }, true);
-  });
+  // ------------------------------------------------- teclas hacia el motor
 
   function nombreDeTecla(code) {
     if (/^Key[A-Z]$/.test(code)) return code[3].toLowerCase();
@@ -56,9 +72,8 @@
     }));
   }
 
-  // Una misma tecla puede estar presionada por varias fuentes (ej: la flecha
-  // arriba del que se mueve y la del que navega el menú). El motor recibe
-  // keydown con la primera fuente y keyup cuando se suelta la última.
+  // Una misma tecla puede estar presionada por varias fuentes. El motor
+  // recibe keydown con la primera fuente y keyup cuando se suelta la última.
   var presionadas = {};   // code -> { "jugador|control": true }
 
   function tecla(code, abajo, fuente) {
@@ -69,17 +84,76 @@
     if (antes !== ahora) enviarAlMotor(code, ahora);
   }
 
-  // Suelta todas las teclas de un jugador (o de un control de un jugador).
-  function soltarTeclas(jugador, controlId) {
+  // Suelta las teclas cuyas fuentes cumplan la condición.
+  function soltarSi(condicion) {
     Object.keys(presionadas).forEach(function (code) {
       Object.keys(presionadas[code]).forEach(function (fuente) {
-        var partes = fuente.split('|');
-        if (partes[0] === jugador && (!controlId || partes[1] === controlId)) {
-          tecla(code, false, fuente);
-        }
+        if (condicion(fuente.split('|'))) tecla(code, false, fuente);
       });
     });
   }
+
+  function soltarJugador(id) { soltarSi(function (f) { return f[0] === id; }); }
+  function soltarCelulares() { soltarSi(function (f) { return f[0] !== 'pc'; }); }
+
+  // ------------------------------------------------------- estado del motor
+
+  function estadoDelMotor() {
+    return motorListo && motorCompleto ? window.Module._doomy_estado() : null;
+  }
+
+  function pausarMotor(pausar) {
+    if (motorListo && motorCompleto) window.Module._doomy_pausar(pausar ? 1 : 0);
+  }
+
+  // Revisa si el menú de DOOM se abrió: mientras está abierto, los
+  // celulares no envían nada (el menú lo maneja solo el PC).
+  setInterval(function () {
+    var em = estadoDelMotor();
+    var abierto = em === null ? menuSupuesto : !!(em & MENU_ABIERTO);
+    if (abierto && !menuAbierto) soltarCelulares();
+    menuAbierto = abierto;
+  }, 100);
+
+  // ------------------------------------------------------ teclado del PC
+
+  function reenviar(e, code) {
+    e.preventDefault();
+    if (e.type === 'keydown' && e.repeat) return;
+    tecla(code, e.type === 'keydown', 'pc|teclado');
+  }
+
+  // Se registra antes de cargar doom.js para ejecutarse antes que el motor:
+  // ninguna tecla física llega al motor sin pasar por aquí. Las teclas de
+  // los celulares son eventos sintéticos (isTrusted = false) y pasan directo.
+  function alTeclado(e) {
+    if (!e.isTrusted || estado.fase === 'lobby') return;
+    e.stopImmediatePropagation();
+    if (e.type === 'keypress') return;
+
+    var em = estadoDelMotor();
+    var escribiendo = em !== null && !!(em & ESCRIBIENDO);
+
+    if (e.code === 'Space' && !menuAbierto) {
+      e.preventDefault();
+      if (e.type === 'keydown' && !e.repeat) alternarPausa();
+      return;
+    }
+    if (estado.fase === 'pausa') return;     // en la pausa general DOOM no recibe teclas
+
+    if (escribiendo) return reenviar(e, e.code);   // nombre de partida: pasan todas las teclas
+    if (e.code === 'Escape') {
+      if (em === null && e.type === 'keydown') menuSupuesto = !menuSupuesto;
+      return reenviar(e, 'Escape');
+    }
+    if (!menuAbierto) return;
+    var code = WASD[e.code] || e.code;
+    if (TECLAS_MENU.indexOf(code) >= 0) reenviar(e, code);
+  }
+
+  ['keydown', 'keyup', 'keypress'].forEach(function (tipo) {
+    window.addEventListener(tipo, alTeclado, true);
+  });
 
   // ---------------------------------------------------------------- MQTT
 
@@ -96,6 +170,7 @@
     });
     publicar(T.estado, {
       fase: estado.fase,
+      motivoPausa: estado.motivoPausa,
       jugadores: jugadores,
       asignacion: estado.asignacion,
       max: D.MAX_JUGADORES
@@ -152,6 +227,10 @@
     });
   }
 
+  function puedeElegir() {
+    return estado.fase === 'lobby' || estado.fase === 'pausa';
+  }
+
   function recibirPeticion(p) {
     var j = estado.jugadores[p.id];
     if (j) j.visto = Date.now();
@@ -166,16 +245,14 @@
       case 'salir': return quitarJugador(p.id, 'salió');
     }
 
-    if (!j) return;
+    if (!j || !puedeElegir()) return;
 
     if (p.tipo === 'listo') {
-      if (estado.fase !== 'lobby') return;
       j.listo = !!p.valor;
       publicarEstado();
     } else if (p.tipo === 'elegir') {
       elegir(p);
     } else if (p.tipo === 'soltar') {
-      if (estado.fase !== 'lobby') return;
       var a = estado.asignacion[p.control];
       if (a && a.jugador === p.id) {
         delete estado.asignacion[p.control];
@@ -194,24 +271,32 @@
         return;
       }
       j = estado.jugadores[p.id] = { nombre: nombre, listo: false, visto: Date.now() };
-      registrar(nombre + ' se unió');
-      // Si la partida ya empezó, recibe los controles que quedaron sin dueño.
-      reasignarHuerfanos();
+      registrar(nombre + ' se unió' + (estado.fase === 'juego' ? ' (podrá elegir controles en la pausa general)' : ''));
     }
     j.nombre = nombre;
     publicar(T.jugador(p.id), { tipo: 'bienvenida' });
     publicarEstado();
   }
 
+  function rechazar(id, motivo) {
+    publicar(T.jugador(id), { tipo: 'rechazo', motivo: motivo });
+  }
+
   function elegir(p) {
-    if (estado.fase !== 'lobby') return;
     var c = D.control(p.control);
     if (!c || c.sensores.indexOf(p.sensor) < 0) return;
     var a = estado.asignacion[c.id];
     if (a && a.jugador !== p.id) {
-      // Cada control tiene un solo dueño.
-      publicar(T.jugador(p.id), { tipo: 'rechazo', motivo: c.nombre + ' ya lo tiene otro jugador.' });
-      return;
+      return rechazar(p.id, c.nombre + ' ya lo tiene otro jugador.');
+    }
+    // Un mismo celular no puede tener dos controles con el mismo gesto.
+    var propios = controlesDe(p.id).map(function (pc) {
+      return { control: pc.id, sensor: estado.asignacion[pc.id].sensor };
+    });
+    var choque = D.conflicto(propios, c.id, p.sensor);
+    if (choque) {
+      return rechazar(p.id, c.nombre + ' con ' + D.SENSORES[p.sensor] + ' usa el mismo gesto que ' +
+        D.control(choque).nombre + '. Elige otro sensor.');
     }
     estado.asignacion[c.id] = { jugador: p.id, sensor: p.sensor };
     estado.jugadores[p.id].listo = false;
@@ -221,31 +306,16 @@
   function quitarJugador(id, motivo) {
     var j = estado.jugadores[id];
     if (!j) return;
-    soltarTeclas(id);
+    soltarJugador(id);
     delete estado.jugadores[id];
-    var huerfanos = controlesDe(id);
-    huerfanos.forEach(function (c) { delete estado.asignacion[c.id]; });
-    registrar(j.nombre + ' ' + motivo + (huerfanos.length && estado.fase === 'juego'
-      ? ': se reasignan ' + huerfanos.map(function (c) { return c.nombre; }).join(', ')
-      : ''));
-    reasignarHuerfanos();
-    publicarEstado();
-  }
-
-  // Durante la partida ningún control puede quedar sin dueño: se le pasa
-  // al jugador con menos controles, en pantalla táctil (no requiere
-  // permisos ni calibración).
-  function reasignarHuerfanos() {
-    if (estado.fase !== 'juego') return;
-    var ids = Object.keys(estado.jugadores);
-    if (!ids.length) return;
-    D.CONTROLES.forEach(function (c) {
-      if (estado.asignacion[c.id]) return;
-      var elegido = ids.reduce(function (menor, id) {
-        return controlesDe(id).length < controlesDe(menor).length ? id : menor;
-      });
-      estado.asignacion[c.id] = { jugador: elegido, sensor: 'tactil' };
-    });
+    var libres = controlesDe(id);
+    libres.forEach(function (c) { delete estado.asignacion[c.id]; });
+    var texto = j.nombre + ' ' + motivo;
+    if (libres.length) texto += ': quedan libres ' + libres.map(function (c) { return c.nombre; }).join(', ');
+    registrar(texto);
+    // En plena partida se abre la pausa general para repartir sus controles.
+    if (estado.fase === 'juego' && libres.length) entrarPausa(texto);
+    else publicarEstado();
   }
 
   function revisarDesconectados() {
@@ -255,7 +325,7 @@
     });
   }
 
-  // Devuelve null si se puede iniciar, o el motivo por el que no.
+  // Devuelve null si se puede iniciar o continuar, o el motivo por el que no.
   function motivoParaNoIniciar() {
     var ids = Object.keys(estado.jugadores);
     if (!cliente || !cliente.connected) return 'Sin conexión con el broker.';
@@ -267,10 +337,60 @@
     return null;
   }
 
+  // ------------------------------------------------------- pausa general
+
+  function entrarPausa(motivo) {
+    if (estado.fase !== 'juego') return;
+    estado.fase = 'pausa';
+    estado.motivoPausa = motivo || 'Pausa abierta desde el PC.';
+    soltarCelulares();
+    soltarSi(function (f) { return f[0] === 'pc'; });
+    pausarMotor(true);
+    publicarEstado();
+  }
+
+  function salirPausa() {
+    if (estado.fase !== 'pausa' || motivoParaNoIniciar()) return;
+    estado.fase = 'juego';
+    estado.motivoPausa = '';
+    pausarMotor(false);
+    publicarEstado();
+    quitarFoco();
+  }
+
+  function alternarPausa() {
+    if (estado.fase === 'juego') entrarPausa();
+    else if (estado.fase === 'pausa') salirPausa();
+  }
+
+  // Guarda la partida (si hay una en curso) y recarga la página en el lobby,
+  // conservando jugadores y controles.
+  function volverAlLobby() {
+    if (!confirm('¿Volver al lobby? La partida se guardará automáticamente.')) return;
+    var guardo = false;
+    if (motorListo && motorCompleto) {
+      try { guardo = window.Module._doomy_autoguardar() === 1; } catch (e) { guardo = false; }
+    }
+    var recargar = function () {
+      var jugadores = {};
+      Object.keys(estado.jugadores).forEach(function (id) { jugadores[id] = { nombre: estado.jugadores[id].nombre }; });
+      try {
+        sessionStorage.setItem('doomy.lobby', JSON.stringify({ sala: sala, jugadores: jugadores, asignacion: estado.asignacion }));
+      } catch (e) { /* sin almacenamiento: los jugadores vuelven a unirse solos */ }
+      location.reload();
+    };
+    if (guardo) {
+      D.guardar('doomy.autoguardado', '1');
+      sincronizarPartidas(recargar);
+    } else {
+      recargar();
+    }
+  }
+
   // -------------------------------------------------------------- input
 
   function recibirInput(m) {
-    if (estado.fase !== 'juego' || !estado.jugadores[m.id]) return;
+    if (estado.fase !== 'juego' || menuAbierto || !estado.jugadores[m.id]) return;
     var c = D.control(m.c);
     var a = c && estado.asignacion[c.id];
     if (!a || a.jugador !== m.id || c.teclas.indexOf(m.k) < 0) return;
@@ -297,33 +417,48 @@
     return e;
   }
 
+  // El foco en un botón haría que Espacio lo "presione".
+  function quitarFoco() {
+    if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+  }
+
   function dibujar() {
-    var lista = $('lista-jugadores');
-    lista.textContent = '';
     var ids = Object.keys(estado.jugadores);
-    if (!ids.length) lista.appendChild(elemento('li', 'Nadie todavía.'));
-    ids.forEach(function (id) {
-      var j = estado.jugadores[id];
-      var n = controlesDe(id).length;
-      lista.appendChild(elemento('li', j.nombre + ' · ' + n + (n === 1 ? ' control' : ' controles') +
-        (estado.fase === 'lobby' ? (j.listo ? ' · listo' : ' · eligiendo') : '')));
+
+    todos('.lista-jugadores').forEach(function (lista) {
+      lista.textContent = '';
+      if (!ids.length) lista.appendChild(elemento('li', 'Nadie todavía.'));
+      ids.forEach(function (id) {
+        var j = estado.jugadores[id];
+        var n = controlesDe(id).length;
+        lista.appendChild(elemento('li', j.nombre + ' · ' + n + (n === 1 ? ' control' : ' controles') +
+          (estado.fase !== 'juego' ? (j.listo ? ' · listo' : ' · eligiendo') : '')));
+      });
     });
 
-    var tabla = $('tabla-controles');
-    tabla.textContent = '';
-    D.CONTROLES.forEach(function (c) {
-      var a = estado.asignacion[c.id];
-      var j = a && estado.jugadores[a.jugador];
-      var fila = elemento('tr');
-      fila.appendChild(elemento('td', c.nombre));
-      fila.appendChild(elemento('td', j ? j.nombre : '— libre —'));
-      fila.appendChild(elemento('td', a ? D.SENSORES[a.sensor] : ''));
-      tabla.appendChild(fila);
+    todos('.tabla-controles').forEach(function (tabla) {
+      tabla.textContent = '';
+      D.CONTROLES.forEach(function (c) {
+        var a = estado.asignacion[c.id];
+        var j = a && estado.jugadores[a.jugador];
+        var fila = elemento('tr');
+        fila.appendChild(elemento('td', c.nombre));
+        fila.appendChild(elemento('td', j ? j.nombre : '— libre —'));
+        fila.appendChild(elemento('td', a ? D.SENSORES[a.sensor] : ''));
+        tabla.appendChild(fila);
+      });
     });
 
-    var motivo = estado.fase === 'lobby' ? motivoParaNoIniciar() : null;
+    var motivo = estado.fase === 'juego' ? null : motivoParaNoIniciar();
+    todos('.motivo').forEach(function (p) { p.textContent = motivo || ''; });
+
     $('iniciar').disabled = !!motivo;
-    $('motivo-iniciar').textContent = motivo || '';
+    $('continuar').hidden = D.leer('doomy.autoguardado') !== '1';
+    $('continuar').disabled = !!motivo;
+
+    $('pausa').hidden = estado.fase !== 'pausa';
+    $('motivo-pausa').textContent = estado.motivoPausa;
+    $('reanudar').disabled = !!motivo;
   }
 
   function prepararLobby() {
@@ -349,39 +484,55 @@
     });
 
     $('borrar-partidas').addEventListener('click', borrarPartidas);
-    $('iniciar').addEventListener('click', iniciarPartida);
+    $('iniciar').addEventListener('click', function () { iniciarPartida(false); });
+    $('continuar').addEventListener('click', function () { iniciarPartida(true); });
+    $('reanudar').addEventListener('click', salirPausa);
+    $('volver-lobby').addEventListener('click', volverAlLobby);
     $('pantalla-completa').addEventListener('click', function () {
       if ($('pantalla').requestFullscreen) $('pantalla').requestFullscreen();
+      quitarFoco();
     });
   }
 
-  function iniciarPartida() {
+  function iniciarPartida(continuar) {
     if (motivoParaNoIniciar()) return;
     estado.fase = 'juego';
     publicarEstado();
     $('lobby').hidden = true;
     $('juego').hidden = false;
-    registrar('Partida iniciada. Quien tiene el Menú debe abrirlo y elegir "New Game".');
+    quitarFoco();
+    registrar(continuar
+      ? 'Cargando la partida guardada…'
+      : 'Partida iniciada. Presiona Esc en el PC y elige "New Game".');
     // El motor se carga recién aquí: el clic en "Iniciar" habilita el audio del navegador.
-    cargarMotor();
+    // La ranura 5 es la del autoguardado (ver doomy_web.c).
+    cargarMotor(continuar ? ['-loadgame', '5'] : []);
   }
 
   // --------------------------------------------------- motor de DOOM
 
-  // Las partidas guardadas (F2/F3 o desde el menú) y la configuración
-  // viven en /save, una carpeta respaldada por el IndexedDB del navegador.
+  // Las partidas guardadas y la configuración viven en /save, una carpeta
+  // respaldada por el IndexedDB del navegador.
   var CARPETA_PARTIDAS = '/save';
   var sincronizando = false;
-  var sincronizarDeNuevo = false;
+  var pendientes = null;       // callbacks a avisar cuando termine la próxima sincronización
 
   function sincronizarPartidas(listo) {
-    if (sincronizando) { sincronizarDeNuevo = true; return; }
+    if (sincronizando) {
+      pendientes = pendientes || [];
+      if (listo) pendientes.push(listo);
+      return;
+    }
     sincronizando = true;
     window.Module.FS.syncfs(false, function (err) {
       sincronizando = false;
       if (err) console.warn('No se pudo guardar en el navegador:', err);
-      if (sincronizarDeNuevo) { sincronizarDeNuevo = false; sincronizarPartidas(listo); }
-      else if (listo) listo();
+      if (listo) listo();
+      if (pendientes) {
+        var siguientes = pendientes;
+        pendientes = null;
+        sincronizarPartidas(function () { siguientes.forEach(function (f) { f(); }); });
+      }
     });
   }
 
@@ -402,10 +553,14 @@
 
   // Borra la base IndexedDB de Emscripten sin necesidad de cargar el motor.
   function borrarPartidas() {
-    if (!confirm('¿Borrar todas las partidas guardadas y la configuración de DOOM en este navegador?')) return;
+    if (!confirm('¿Borrar todas las partidas guardadas (incluido el autoguardado) y la configuración de DOOM en este navegador?')) return;
     try {
       var peticion = indexedDB.deleteDatabase(CARPETA_PARTIDAS);
-      peticion.onsuccess = function () { alert('Partidas borradas.'); };
+      peticion.onsuccess = function () {
+        D.guardar('doomy.autoguardado', '0');
+        dibujar();
+        alert('Partidas borradas.');
+      };
       peticion.onerror = function () { alert('No se pudieron borrar las partidas.'); };
     } catch (e) {
       alert('Este navegador no permite borrar las partidas.');
@@ -418,7 +573,7 @@
     $('estado-motor').textContent = texto;
   }
 
-  function cargarMotor() {
+  function cargarMotor(argumentos) {
     var canvas = $('canvas');
     var primerCuadro = true;
 
@@ -430,7 +585,7 @@
 
     window.Module = {
       canvas: canvas,
-      arguments: [],
+      arguments: argumentos,
       preRun: [montarPartidas],
       // doom.js, doom.wasm y doom.data están en la carpeta doom/.
       locateFile: function (ruta) { return 'doom/' + ruta; },
@@ -475,6 +630,14 @@
       if (primerCuadro) {
         primerCuadro = false;
         motorListo = true;
+        motorCompleto = typeof window.Module._doomy_estado === 'function';
+        if (!motorCompleto) {
+          $('aviso-motor').hidden = false;
+          $('aviso-motor').textContent = 'El motor de DOOM no está recompilado con doomy_web.c: ' +
+            'la pausa no detiene el juego, el autoguardado no funciona y el menú se detecta de forma aproximada. ' +
+            'Recompila con doom/build-web.sh (ver INSTRUCCIONES.md).';
+        }
+        if (estado.fase === 'pausa') pausarMotor(true);
         $('overlay').hidden = true;
       }
       return getContextOriginal(tipo, opciones);

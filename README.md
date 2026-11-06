@@ -11,7 +11,7 @@
 
 ## 1. Contexto
 
-En el año 2014 en la plataforma Twitch, se realizó un directo todos quienes observaban la transmisión podían jugar, este evento se llamó "_Twitch Plays Pokemon_". Es decir que miles de personas controlaban la misma partida y al mismo personaje a la vez, esto fue posible ya que mediante la escritura de comandes en el chat de Twitch un _script_ lo interpretaba y realizaba las acciones en el videojuego. 
+En el año 2014 en la plataforma Twitch, se realizó un directo todos quienes observaban la transmisión podían jugar, este evento se llamó "_Twitch Plays Pokemon_". Es decir que miles de personas controlaban la misma partida y al mismo personaje a la vez, esto fue posible ya que mediante la escritura de comandes en el chat de Twitch un _script_ lo interpretaba y realizaba las acciones en el videojuego.
 
 Esto fue tomado como punto de partida para que al momento de jugar DOOM con tus amigos, cada quien controle un elemento de la partida, teniendo que coordinarse para poder terminar el juego
 
@@ -76,7 +76,7 @@ Los usuarios deben poder elegir que elementos controlar en su celular, además d
 
 ---
 
-## Indicaciones Cloude
+## Indicaciones Claude
 
 ### Contexto y Propósito
 
@@ -138,7 +138,7 @@ Los usuarios deben poder elegir que elementos controlar en su celular, además d
 
 - **Reglas del juego:** referencia `/doom`
 
-- **Controles:** utilizar los sensores como el giroscopio, el acelerometro, sensor de luz, la pantalla táctil
+- **Controles:** utilizar los sensores como el giroscopio, el acelerometro, la pantalla táctil
 
 ---
 
@@ -146,44 +146,93 @@ Los usuarios deben poder elegir que elementos controlar en su celular, además d
 
 > Mapeo inicial definido por Claude para la primera versión. Editar esta tabla con los mapeos definitivos; el código está en `comun.js` (descripciones y teclas) y `control.js` (umbrales y cálculo).
 
-| Control | Sensor | Gesto | Comportamiento |
-|---|---|---|---|
-| Moverse | Giroscopio | Inclinar la parte superior del celular hacia adelante / hacia uno | Avanza / retrocede mientras supere ±15° |
-| Moverse | Acelerómetro | Igual, calculado con la gravedad | Avanza / retrocede mientras supere ±15° |
-| Moverse | Pantalla táctil | Botones Avanzar / Retroceder | Mientras se mantienen presionados |
-| Girar | Giroscopio | Inclinar a izquierda / derecha (como volante) | Gira mientras supere ±15° |
-| Girar | Acelerómetro | Igual, calculado con la gravedad | Gira mientras supere ±15° |
-| Girar | Pantalla táctil | Botones Izquierda / Derecha | Mientras se mantienen presionados |
-| Desplazarse lateralmente | Giroscopio | Rotar el celular sobre sí mismo (como una perilla) | Se desplaza mientras supere ±15° |
-| Desplazarse lateralmente | Acelerómetro | Mover el celular de golpe a izquierda / derecha (> 5 m/s²) | Se desplaza 250 ms por golpe |
-| Desplazarse lateralmente | Pantalla táctil | Botones Izquierda / Derecha | Mientras se mantienen presionados |
-| Disparar | Pantalla táctil | Botón | Dispara mientras se mantiene |
-| Disparar | Acelerómetro | Sacudir (> 14 m/s²) | Dispara 400 ms |
-| Disparar | Giroscopio | Giro brusco (> 300 °/s) | Dispara 400 ms |
-| Abrir puertas / usar | Pantalla táctil | Botón | Usa al tocar |
-| Abrir puertas / usar | Acelerómetro | Sacudir | Usa (200 ms) |
-| Abrir puertas / usar | Giroscopio | Giro brusco | Usa (200 ms) |
-| Correr | Pantalla táctil | Botón | Corre mientras se mantiene |
-| Correr | Acelerómetro | Sacudir | Alterna correr / caminar |
-| Correr | Giroscopio | Giro brusco | Alterna correr / caminar |
-| Cambiar arma | Pantalla táctil | Botones 1 a 7 | Elige esa arma |
-| Cambiar arma | Acelerómetro | Sacudir | Pasa a la siguiente arma |
-| Cambiar arma | Giroscopio | Giro brusco | Pasa a la siguiente arma |
-| Mapa | Pantalla táctil | Botón | Abre / cierra el mapa |
-| Mapa | Acelerómetro | Sacudir | Abre / cierra el mapa |
-| Mapa | Giroscopio | Giro brusco | Abre / cierra el mapa |
-| Menú | Pantalla táctil | Botones Menú (Esc), ▲ ▼ ◀ ▶, Aceptar, Sí, No, Borrar, Escribir "DOOMY" | Navega el menú de DOOM |
+### Sensor Giroscopio
 
-Notas:
+| # | Control | Gesto | Comportamiento |
+| - | ------- | ----- | -------------- |
+| 1 | Moverse / Avanzar - retroceder | Inclinar el teléfono hacia adelante o atrás | Utiliza el eje X del dispositivo para el desplazamiento / Avanzar y retroceder ±_n0_°  |
+| 2 | Moverse lateralmente | Inclinar el teléfono hacia los lados | Utiliza el eje Z o Y del dispositivo para el desplazamiento lateral / izquierdo y derecha ±_n0_° |
+| 3 | Girar |  No está habilitado | No está habilitado |
+| 4 | Disparar | Hacer un giro rápido y breve hacia los lados | Al hacer un giro rápido en los ejes Z o Y  +  detectar una aceleración de menos de 1s con el acelerometro se ejecuta la acción |
+| 5 | Abrir puertas / Usar | Hacer un giro rápido y breve hacia adelante y/o atrás | Al hacer un giro rápido en el eje X  +  detectar una aceleración de menos de 1s con el acelerometro se ejecuta la acción |
+| 6 | Correr | Inclinar ampliamente el teléfono hacia adelante | Si la inclinación del teléfono es >= _n1_° |
+| 7 | Cambiar arma | No disponible con giroscopio | No disponible con giroscopio |
+| 8 | Mapa | No disponible con giroscopio | No disponible con giroscopio |
+
+<br>
+
+### Sensor Acelerómetro
+
+| # | Control | Gesto | Comportamiento |
+| - | ------- | ----- | -------------- |
+| 1 | Moverse / Avanzar - retroceder | Inclinar el teléfono hacia adelante o atrás | Utiliza el eje X del dispositivo para el desplazamiento / Avanzar y retroceder ±_n2_°  |
+| 2 | Moverse lateralmente | Inclinar el teléfono hacia los lados | Utiliza el eje Z o Y del dispositivo para el desplazamiento lateral / izquierdo y derecha ±_n2_° |
+| 3 | Girar |  No está habilitado | No está habilitado |
+| 4 | Disparar | Hacer un movimiento rápido | Al detectar una aceleración de ±_n3_ m/s² |
+| 5 | Abrir puertas / Usar | Hacer un giro rápido y breve hacia adelante y/o atrás | Al hacer un giro rápido en el eje X  +  detectar una aceleración de menos de 1s con el acelerometro se ejecuta la acción |
+| 6 | Correr | Inclinar ampliamente el teléfono hacia adelante | Si la inclinación del teléfono es >= _n4_° |
+| 7 | Cambiar arma | No disponible con acelerómetro | No disponible con acelerómetro |
+| 8 | Mapa | No disponible con acelerómetro | No disponible con acelerómetro |
+
+<br>
+
+### Sensor Touch
+
+| # | Control | Gesto | Comportamiento |
+| - | ------- | ----- | -------------- |
+| 1 | Moverse / Avanzar - retroceder | Deslizar hacia adelante / atrás | Deslizar el dedo<sup>1</sup> |
+| 2 | Moverse lateralmente | Deslizar hacia izquierda / derecha | Deslizar el dedo<sup>1</sup> |
+| 3 | Girar | No está habilitado | No está habilitado |
+| 4 | Disparar | Colocar 2 dedos en la pantalla | Al identificar solo 2 dedos se debe disparar<sup>2</sup> |
+| 5 | Abrir puertas / Usar | Hacer doble click | Se deben detectar 2 presiones en un rango determinado en un tiempo de 2 a 3 segundos<sup>3</sup> |
+| 6 | Correr | Deslizar hacia adelante con 2 dedos | Al detectar 2 dedos deslizandose se va a activar el correr<sup>4</sup> |
+| 7 | Cambiar arma | Menú con flecha <br> ◀ ▶ | Funciona como un carrusel<sup>5</sup> |
+| 8 | Mapa | Botón Mapa | Un botón que sea exclusivamente para habilitar el menú<sup>6</sup> |
+
+<sup><strong>1</strong></sup> Esto debe simular un _joystick_ virtual, no posee una ubicación determinada, funciona donde se coloque el dedo
+
+<sup><strong>2</strong></sup> Si se está desplazando y se coloca un dedo encima no debe bloquearse la acción de disparar ni moverse, deben ejecutarse a la vez
+
+<sup><strong>3</strong></sup> Este _doble click_ no es restrictivo con el _joystick virtual_ 
+
+<sup><strong>4</strong></sup> Debe identifarse que se estan deslizandose para no interferir con el _4. Disparar_
+
+<sup><strong>5</strong></sup> Debe visualizarse ◀ [Arma seleccionada] ▶
+
+<sup><strong>6</strong></sup> Ubicado en la esquina inferior izquierda, funciona como un _push button_
+
+<br>
+
+### Sensor Micrófono
+
+| # | Control | Gesto | Comportamiento |
+| - | ------- | ----- | -------------- |
+| 1 | Moverse / Avanzar - retroceder | Frecuencia de sonidos | Al detectar sonidos en un umbral de fecuencia avanza, fuera de ese umbral retrocede |
+| 2 | Moverse lateralmente | Sonidos altos o bajos | Se establece un umbral, si es mayor va a la derecha, si es menor a la izquierda (Se considera un umbral para filtrar ruido) |
+| 3 | Girar | No está habilitado | No está habilitado |
+| 4 | Disparar | Se debe detectar un sónido en altos decibeles (grito) | Debe superarse un umbral de dB |
+| 5 | Abrir puertas / Usar | Sónido de bajos dB | El sonido debe estar bajo el umbral de _Disparar_ y sobre un umbral que evite detectar ruido de fondo |
+| 6 | Correr | Sonidos altos dB | Si se detectan notas sobre un umbral de dB corre |
+| 7 | Cambiar arma | No disponible con micrófono | No disponible con micrófono |
+| 8 | Mapa | sonido bajos Hz | si suena algo debajo de un umbral (grave) aparece el mapa |
+
+<br>
+
+### Notas
+
+- El sensor touch es el único que muestra información en pantalla
 - Entre dos sacudidas o giros bruscos hay una pausa mínima de 450 ms.
-- La posición neutral se calibra al presionar "Estoy listo" y con el botón "Recalibrar sensores".
-- Cada eje con sensor tiene un botón "Invertir dirección" por si el celular reporta los ejes al revés.
+- La posición neutral se calibra al presionar "Estoy listo"
+- Al habilitar la _pausa general_ se pueden "Recalibrar sensores", "Modificar sensibilidad de sensores", "Invertir dirección"
+- No se pueden elegir 2 sensores con controles que se ampliquen de manera similar o igual en el mismo dispositivo
 
 ---
 
 ## Comentarios Claude
 
 Elementos a mejorar en próximas versiones:
+
+### v01
 
 1. **Calibrar umbrales con celulares reales.** Los valores (15°, 5 m/s², 14 m/s², 300 °/s) son provisorios y no se han probado en dispositivos; conviene ajustarlos o hacerlos configurables desde el lobby.
 2. **Conflictos de sensores en un mismo celular.** Si un jugador maneja dos controles con el mismo gesto (por ejemplo Disparar y Usar con sacudida), una sacudida activa ambos. Se podría advertir en el lobby o impedir esa combinación.
@@ -196,3 +245,36 @@ Elementos a mejorar en próximas versiones:
 9. **Seguridad.** La contraseña del broker está en `config.js`, que es público en GitHub Pages; cualquiera podría publicar en `tacto/#`. Una alternativa es un usuario de solo los temas `tacto/doomy/#` o credenciales por sala.
 10. **Latencia.** Los inputs viajan con QoS 0 por el broker en la nube; si se nota retraso, evaluar un broker más cercano.
 11. **Estilos.** `style.css` es básico y provisorio.
+
+#### soluciones
+
+1. Debe existir un _pausa general_ en la web PC que al entrar, cada dispositivo puede configurar la sensibilidad y umbrales de sus sensores. Este se abre presionando _`enter`_
+2. Esto se soluciona bloqueando la opción de que 2 elementos sean elegibles por el mismo usuario 
+3. Pendiente
+4. Habilitarlo solo si el dispositivo lo permite
+5. El giro está deshabilitado por el momento
+6. El menú debe ser controlado desde el PC con flechas o WASD, este debe habilitarse presionando _`esc`_
+7. Al desconectarse un jugador, debe abrirse el _`pausa general`_ permitiendo que los jugadores restantes elijan que otros elementos controlar
+8. Añade en la WEB PC una opción de `volver al lobby`
+9. Si es posible de hacerlo automático, realizalo
+10. Ignorar
+11. Ignorar
+12. Debe ser posible un máximo de 9 jugadores ahora
+
+### v02
+
+Cambios aplicados respecto de v01: 7 controles (Girar se reemplazó por "Moverse lateralmente", que gira), máximo 7 jugadores, menú de DOOM desde el PC (Esc + flechas/WASD), pausa general con Espacio (también se abre sola si alguien se desconecta), ajustes de sensibilidad por celular en la pausa, bloqueo de gestos iguales en un mismo celular, sensores ocultos si el celular no los tiene, micrófono como cuarto sensor, nuevos gestos táctiles, indicadores de teclas en el celular, volver al lobby con autoguardado y opción de continuar. Los valores por defecto están en `INSTRUCCIONES.md`.
+
+Elementos a mejorar:
+
+1. **Recompilar el motor.** La pausa que detiene a DOOM, el autoguardado y la detección del menú dependen de `doomy_web.c`; mientras no se recompile con Emscripten, la página funciona en un modo aproximado (lo avisa en pantalla). El código C nuevo todavía no se ha compilado ni probado.
+2. **Probar en celulares reales.** La lógica de sala, lobby, conflictos, inputs y pausa se probó con el broker real en un navegador simulado, pero los sensores, el micrófono y los gestos táctiles no se han probado en dispositivos; los valores por defecto son estimaciones.
+3. **Tablas del README desactualizadas.** Las tablas de mapeo siguen diciendo "desplazamiento lateral" y "Girar: no habilitado"; en el juego, "Moverse lateralmente" ahora gira. Conviene ajustar el texto, y los valores _n0_–_n4_ ya están definidos en `INSTRUCCIONES.md`.
+4. **Micrófono.** Los dB son relativos al micrófono de cada celular (no dB reales), la frecuencia se estima con el pico del espectro (la voz tiene armónicos y puede fallar) y "usar" se activa con cualquier sonido suave cada 0,6 s. Además, la regla de gestos permite en un mismo celular un control por volumen y otro por frecuencia, que reaccionan al mismo sonido.
+5. **Ajustes solo en la pausa.** La primera vez hay que iniciar la partida y pausar para calibrar umbrales; se podrían mostrar también en el lobby. Además, algunos umbrales se comparten entre controles (por ejemplo, la inclinación de Moverse y Lateral).
+6. **Disparar táctil exige 2 dedos** aunque el jugador no tenga el joystick; en ese caso podría bastar un dedo. Si el mismo celular tiene Correr táctil, el disparo espera 150 ms para distinguirlo del deslizamiento.
+7. **Autoguardado en la ranura 6.** Sobrescribe lo que los jugadores hayan guardado en esa ranura del menú de DOOM.
+8. **Volver al lobby recarga el PC.** Los celulares ven "sala cerrada" un momento y se reconectan solos; si se cierra la pestaña del PC en vez de usar el botón, no hay autoguardado.
+9. **Jugadores que entran a mitad de partida** quedan sin controles hasta la próxima pausa general; el PC solo lo muestra en el registro.
+10. **Menú del PC sin el motor recompilado.** Se adivina si el menú está abierto contando los Esc; al elegir "New Game" el menú se cierra solo y puede desincronizarse.
+11. **"Qué NO debe ocurrir"** sigue vacío en el README; completarlo ayudaría a definir pruebas.
