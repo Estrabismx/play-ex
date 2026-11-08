@@ -7,7 +7,7 @@
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="celular">
+<body class="celular fija">
   <p id="mensaje" class="aviso"></p>
 
   <!-- 1. Unirse a una sala -->
@@ -24,15 +24,16 @@
     </form>
   </section>
 
-  <!-- 2. Lobby y pausa general: elegir controles y sensores -->
+  <!-- 2. Lobby y pausa general: elegir controles, sensores y ajustes.
+       Al tocar "Estoy listo" pasa a la fase de calibración (panel de ajustes). -->
   <section id="vista-lobby" hidden>
     <header class="cabecera">
       <strong id="titulo-lobby">Lobby</strong> · Sala <strong id="lobby-sala"></strong>
       <p id="motivo-pausa" class="error"></p>
     </header>
 
-    <!-- Pestañas: solo en la pausa general -->
-    <nav id="pestanas" class="pestanas" hidden>
+    <!-- Pestañas: se ocultan durante la calibración -->
+    <nav id="pestanas" class="pestanas">
       <button type="button" data-pestana="controles" class="activa">Controles</button>
       <button type="button" data-pestana="ajustes">Ajustes</button>
     </nav>
@@ -52,21 +53,20 @@
     </div>
 
     <footer class="pie">
-      <p id="ayuda-control" class="aviso">Toca un control para ver su gesto. No puedes tener dos controles con el mismo gesto.</p>
-      <button type="button" id="listo" class="boton-listo">Estoy listo</button>
+      <p id="ayuda-control" class="aviso">Toca un control para ver su gesto. No puedes tener dos controles que interfieran.</p>
+      <div class="botones-pie">
+        <button type="button" id="volver-calibracion" hidden>Volver</button>
+        <button type="button" id="listo" class="boton-listo">Estoy listo</button>
+      </div>
     </footer>
   </section>
 
   <!-- 3. Partida -->
   <section id="vista-juego" hidden>
-    <div id="teclas" class="teclas"></div>
-    <div id="tarjetas"></div>
-
-    <!-- Pantalla táctil: joystick virtual, dos dedos y doble toque -->
+    <!-- Solo elementos táctiles: los controles con sensores no muestran nada -->
     <div id="zona-tactil" class="zona-tactil" hidden>
       <div id="joystick-base" class="joystick-base" hidden></div>
       <div id="joystick-perilla" class="joystick-perilla" hidden></div>
-      <p id="ayuda-tactil" class="aviso"></p>
     </div>
 
     <!-- Abajo: Mapa en la esquina izquierda y el carrusel de armas -->

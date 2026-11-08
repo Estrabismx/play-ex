@@ -97,28 +97,31 @@
     });
   }
 
-  // Muestra, por jugador, sus controles y qué tecla está presionando cada uno.
+  // A la derecha del juego: una columna por jugador con sus controles,
+  // resaltando en vivo la acción que está ejecutando cada uno.
   function dibujarAcciones() {
     var contenedor = $('acciones');
     contenedor.textContent = '';
     Object.keys(estado.jugadores).forEach(function (id) {
-      var fila = elemento('div');
-      fila.className = 'accion-jugador';
-      fila.appendChild(elemento('strong', estado.jugadores[id].nombre));
+      var columna = elemento('div');
+      columna.className = 'columna';
+      columna.appendChild(elemento('strong', estado.jugadores[id].nombre));
       var propios = controlesDe(id);
-      if (!propios.length) fila.appendChild(elemento('span', ' sin controles'));
+      if (!propios.length) columna.appendChild(elemento('small', 'Sin controles'));
       propios.forEach(function (c) {
         var activas = c.teclas.filter(function (code) {
           return presionadas[code] && presionadas[code][id + '|' + c.id];
         });
-        var chip = elemento('span', c.nombre + (activas.length
-          ? ': ' + activas.map(function (code) { return D.NOMBRES_TECLAS[code] || code; }).join(' ')
-          : ''));
-        chip.className = activas.length ? 'tecla activa' : 'tecla';
-        chip.title = D.SENSORES[estado.asignacion[c.id].sensor];
-        fila.appendChild(chip);
+        var accion = elemento('div');
+        accion.className = activas.length ? 'accion activa' : 'accion';
+        accion.appendChild(elemento('span', c.corto));
+        accion.appendChild(elemento('small', D.SENSORES[estado.asignacion[c.id].sensor]));
+        accion.appendChild(elemento('b', activas.length
+          ? activas.map(function (code) { return D.NOMBRES_TECLAS[code] || code; }).join(' ')
+          : '·'));
+        columna.appendChild(accion);
       });
-      contenedor.appendChild(fila);
+      contenedor.appendChild(columna);
     });
   }
 
@@ -265,6 +268,13 @@
     });
   }
 
+  // [{ control, sensor }] de un jugador (para revisar conflictos).
+  function asignacionesDe(id) {
+    return controlesDe(id).map(function (c) {
+      return { control: c.id, sensor: estado.asignacion[c.id].sensor };
+    });
+  }
+
   function puedeElegir() {
     return estado.fase === 'lobby' || estado.fase === 'pausa';
   }
@@ -293,6 +303,8 @@
     } else if (p.tipo === 'soltar') {
       var a = estado.asignacion[p.control];
       if (a && a.jugador === p.id) {
+        var problema = D.conflictoAlSoltar(asignacionesDe(p.id), p.control);
+        if (problema) return rechazar(p.id, 'No puedes soltar ' + D.control(p.control).nombre + ': ' + problema + '.');
         delete estado.asignacion[p.control];
         j.listo = false;
         publicarEstado();
@@ -327,14 +339,10 @@
     if (a && a.jugador !== p.id) {
       return rechazar(p.id, c.nombre + ' ya lo tiene otro jugador.');
     }
-    // Un mismo celular no puede tener dos controles con el mismo gesto.
-    var propios = controlesDe(p.id).map(function (pc) {
-      return { control: pc.id, sensor: estado.asignacion[pc.id].sensor };
-    });
-    var choque = D.conflicto(propios, c.id, p.sensor);
+    // Un mismo celular no puede tener controles que interfieran entre sí.
+    var choque = D.conflicto(asignacionesDe(p.id), c.id, p.sensor);
     if (choque) {
-      return rechazar(p.id, c.nombre + ' con ' + D.SENSORES[p.sensor] + ' usa el mismo gesto que ' +
-        D.control(choque).nombre + '. Elige otro sensor.');
+      return rechazar(p.id, c.nombre + ' con ' + D.SENSORES[p.sensor] + ': ' + choque + '. Elige otro sensor.');
     }
     estado.asignacion[c.id] = { jugador: p.id, sensor: p.sensor };
     estado.jugadores[p.id].listo = false;
@@ -447,8 +455,9 @@
     dibujar();
   }
 
+  // La vista de juego solo muestra la partida: el registro va a la consola.
   function registrar(texto) {
-    $('registro').textContent = new Date().toLocaleTimeString() + ' · ' + texto;
+    console.log(new Date().toLocaleTimeString() + ' · ' + texto);
   }
 
   function elemento(etiqueta, texto) {
@@ -504,7 +513,6 @@
 
   function prepararLobby() {
     $('codigo-sala').textContent = sala;
-    $('codigo-sala-juego').textContent = sala;
     $('max-jugadores').textContent = D.MAX_JUGADORES;
 
     var url = new URL('control.html?sala=' + sala, location.href).href;
@@ -529,10 +537,6 @@
     $('continuar').addEventListener('click', function () { iniciarPartida(true); });
     $('reanudar').addEventListener('click', salirPausa);
     $('volver-lobby').addEventListener('click', volverAlLobby);
-    $('pantalla-completa').addEventListener('click', function () {
-      if ($('pantalla').requestFullscreen) $('pantalla').requestFullscreen();
-      quitarFoco();
-    });
   }
 
   function iniciarPartida(continuar) {
@@ -541,6 +545,7 @@
     publicarEstado();
     $('lobby').hidden = true;
     $('juego').hidden = false;
+    document.body.classList.add('jugando');
     quitarFoco();
     registrar(continuar
       ? 'Cargando la partida guardada…'

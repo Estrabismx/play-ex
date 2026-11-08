@@ -67,34 +67,59 @@
   var GESTOS = {
     'mover/giroscopio': ['inclinar-adelante'],
     'mover/acelerometro': ['inclinar-adelante'],
-    'mover/microfono': ['frecuencia'],
     'lateral/giroscopio': ['inclinar-lados'],
     'lateral/acelerometro': ['inclinar-lados'],
-    'lateral/microfono': ['volumen'],
     'disparar/giroscopio': ['inclinar-lados', 'brusco'],
     'disparar/acelerometro': ['brusco'],
-    'disparar/microfono': ['volumen'],
     'usar/giroscopio': ['inclinar-adelante', 'brusco'],
     'usar/acelerometro': ['brusco'],
-    'usar/microfono': ['volumen'],
     'correr/giroscopio': ['inclinar-adelante'],
     'correr/acelerometro': ['inclinar-adelante'],
-    'correr/microfono': ['volumen'],
-    'mapa/microfono': ['frecuencia']
-    // Pantalla táctil: sus gestos están pensados para usarse a la vez.
+    // Micrófono: un mismo sonido activa a la vez los controles por volumen
+    // y por frecuencia, así que solo se permite un control con micrófono.
+    'mover/microfono': ['microfono'],
+    'lateral/microfono': ['microfono'],
+    'disparar/microfono': ['microfono'],
+    'usar/microfono': ['microfono'],
+    'correr/microfono': ['microfono'],
+    'mapa/microfono': ['microfono'],
+    // Pantalla táctil: apoyar un dedo extra dispara, así que no puede
+    // convivir con "dos dedos deslizando" (correr).
+    'disparar/tactil': ['dedo-extra'],
+    'correr/tactil': ['dedo-extra']
   };
 
-  // Devuelve el control (de "propios": [{control, sensor}]) que choca con
-  // elegir controlId/sensor, o null si no hay conflicto.
-  function conflicto(propios, controlId, sensor) {
-    var gestos = GESTOS[controlId + '/' + sensor] || [];
-    for (var i = 0; i < propios.length; i++) {
-      var p = propios[i];
-      if (p.control === controlId) continue;
-      var otros = GESTOS[p.control + '/' + p.sensor] || [];
-      if (gestos.some(function (g) { return otros.indexOf(g) >= 0; })) return p.control;
+  function tieneTactil(conjunto, controlId) {
+    return conjunto.some(function (p) { return p.control === controlId && p.sensor === 'tactil'; });
+  }
+
+  // Sin joystick táctil, el primer dedo dispara: el doble toque de "usar"
+  // también dispararía. Devuelve el motivo, o null si no hay problema.
+  function faltaJoystick(conjunto) {
+    if (tieneTactil(conjunto, 'disparar') && tieneTactil(conjunto, 'usar') &&
+        !tieneTactil(conjunto, 'mover') && !tieneTactil(conjunto, 'lateral')) {
+      return 'Disparar y Usar táctiles necesitan el joystick táctil (Moverse o Lateral)';
     }
     return null;
+  }
+
+  // Devuelve por qué elegir controlId/sensor choca con los controles que ya
+  // tiene el celular ("propios": [{control, sensor}]), o null si se puede.
+  function conflicto(propios, controlId, sensor) {
+    var otros = propios.filter(function (p) { return p.control !== controlId; });
+    var gestos = GESTOS[controlId + '/' + sensor] || [];
+    for (var i = 0; i < otros.length; i++) {
+      var suyos = GESTOS[otros[i].control + '/' + otros[i].sensor] || [];
+      if (gestos.some(function (g) { return suyos.indexOf(g) >= 0; })) {
+        return 'mismo gesto que ' + control(otros[i].control).corto;
+      }
+    }
+    return faltaJoystick(otros.concat([{ control: controlId, sensor: sensor }]));
+  }
+
+  // Devuelve por qué no se puede soltar controlId, o null si se puede.
+  function conflictoAlSoltar(propios, controlId) {
+    return faltaJoystick(propios.filter(function (p) { return p.control !== controlId; }));
   }
 
   // Cómo se maneja cada control con cada sensor (se muestra en el celular).
@@ -109,7 +134,7 @@
     'lateral/microfono': 'Sonido fuerte: gira a la derecha. Sonido suave: gira a la izquierda. En silencio no gira.',
     'disparar/giroscopio': 'Haz un giro rápido y breve del celular hacia un lado.',
     'disparar/acelerometro': 'Haz un movimiento rápido con el celular.',
-    'disparar/tactil': 'Apoya un segundo dedo en la pantalla (también mientras usas el joystick).',
+    'disparar/tactil': 'Apoya un dedo que no sea el del joystick: dispara al instante y mientras siga apoyado. Cada dedo nuevo vuelve a disparar.',
     'disparar/microfono': 'Grita: dispara mientras el sonido supere el umbral.',
     'usar/giroscopio': 'Haz un giro rápido y breve del celular hacia adelante o atrás.',
     'usar/acelerometro': 'Mueve el celular rápido hacia adelante o hacia atrás.',
@@ -223,6 +248,7 @@
     AJUSTES: AJUSTES,
     control: control,
     conflicto: conflicto,
+    conflictoAlSoltar: conflictoAlSoltar,
     descripcion: descripcion,
     limpiarSala: limpiarSala,
     temas: temas,

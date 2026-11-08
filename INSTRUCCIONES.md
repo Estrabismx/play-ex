@@ -82,14 +82,19 @@ pestaña: los controles táctiles funcionan con el mouse (un solo "dedo").
 1. **PC**: abre la página. Aparece la sala (código de 5 letras) y un QR.
 2. **Celulares**: escanean el QR, escriben su nombre y entran al lobby.
 3. **Lobby (en el celular)**: cada jugador toma controles y elige con qué sensor.
-   La pantalla del celular ocupa toda la pantalla, sin scroll: una fila por control
-   (nombre y dueño · sensor · Tomar / Soltar) y, al pie, el gesto del control elegido.
+   Todas las vistas del celular ocupan la pantalla completa, sin scroll. El lobby tiene dos pestañas:
+   - **Controles**: una fila por control (nombre y dueño · sensor · Tomar / Soltar) y, al pie,
+     el gesto del control elegido.
+   - **Ajustes**: recalibrar, invertir dirección, umbrales y valores por defecto (igual que en la pausa general).
    - Cada control tiene un solo dueño.
    - En un control que ya es tuyo, al elegir otro sensor en la lista el cambio se aplica de inmediato.
-   - Un celular puede tener varios controles, pero **no dos con el mismo gesto**
-     (ver la tabla del punto 6). Los sensores que el celular no tiene no aparecen disponibles.
-4. Cada jugador presiona **"Estoy listo"**: se piden permisos (sensores, micrófono) y se
-   calibra la posición neutral (sostén el celular como lo vas a usar).
+   - Un celular puede tener varios controles, pero **no dos que interfieran**
+     (ver "Controles que no pueden estar en el mismo celular"). Los sensores que el celular no tiene no aparecen disponibles.
+4. Cada jugador presiona **"Estoy listo"**: se piden permisos (sensores, micrófono) y se abre la
+   **fase de calibración**. Se fija la posición neutral (sostén el celular como lo vas a usar), se
+   ve la lectura en vivo de cada sensor junto a sus umbrales y se pueden cambiar. **"Recalibrar"**
+   vuelve a fijar la posición neutral. Al tocar **"Confirmar calibración"** el jugador queda listo;
+   **"Volver"** regresa sin quedar listo.
 5. **PC**: cuando todos los controles tienen dueño y todos están listos, se habilitan
    **"Iniciar partida nueva"** y, si hay un autoguardado, **"Continuar partida guardada"**.
 6. Partida nueva: en el PC presiona **Esc** y elige *New Game*.
@@ -110,19 +115,21 @@ Mientras el menú está abierto, los celulares no envían nada. Ojo: en la panta
 de DOOM cualquier tecla (también la de un celular) abre el menú; Espacio no abre la pausa
 mientras el menú está abierto.
 
-Bajo el juego, el PC muestra **Jugadores en acción**: cada jugador con sus controles,
-resaltando en vivo la tecla que está presionando cada uno.
+Durante la partida el PC solo muestra el juego, centrado, y a la derecha **una columna por
+jugador** (1 a 7) con sus controles, resaltando en vivo la acción que está ejecutando cada uno.
+Para pantalla completa se usa la del navegador (F11). En el celular solo se ven los elementos
+táctiles (joystick, botón Mapa y carrusel de armas); los controles con sensores no muestran nada.
 
 ### Pausa general
 
 Se abre con **Espacio** en el PC, o sola cuando un jugador se desconecta.
 
 - DOOM se detiene y **todos pasan a "no listo"**.
-- En los celulares aparecen dos pestañas:
+- En los celulares aparecen las mismas dos pestañas del lobby:
   - **Controles**: tomar los que quedaron libres, soltar o cambiar el sensor de los propios.
   - **Ajustes**: recalibrar, invertir dirección, volver a los valores por defecto y
     umbrales (con la lectura actual del sensor al lado, para elegir el valor).
-- Cada jugador presiona **"Estoy listo"** (se recalibra con la posición de ese momento).
+- Cada jugador presiona **"Estoy listo"** y pasa por la fase de calibración, igual que en el lobby.
 - Para continuar (Espacio o botón **Continuar**), todos los controles deben tener
   dueño y todos deben estar listos. Al continuar, cada celular muestra sus controles nuevos.
 - **Volver al lobby** guarda la partida automáticamente (ranura 6 del menú de DOOM,
@@ -147,7 +154,8 @@ invertidos y tus umbrales.
 
 ### Gestos y valores por defecto
 
-Todos los umbrales se cambian en la pausa general (por celular).
+Todos los umbrales se cambian por celular en la pestaña Ajustes (lobby y pausa general)
+o en la fase de calibración.
 
 | Control | Sensor | Gesto | Valor por defecto |
 | --- | --- | --- | --- |
@@ -161,7 +169,7 @@ Todos los umbrales se cambian en la pausa general (por celular).
 | Lateral (girar) | Micrófono | Fuerte = derecha, suave = izquierda, silencio = nada | límite −30 dB |
 | Disparar | Giroscopio | Giro rápido hacia un lado + aceleración en el último segundo | 250 °/s y 4 m/s² |
 | Disparar | Acelerómetro | Movimiento rápido | 12 m/s² |
-| Disparar | Táctil | Segundo dedo apoyado (también con el joystick) | — |
+| Disparar | Táctil | Cada dedo nuevo que no sea el del joystick dispara al instante; sigue mientras quede apoyado | — |
 | Disparar | Micrófono | Grito: dispara mientras dure | −12 dB |
 | Usar | Giroscopio | Giro rápido adelante / atrás + aceleración en el último segundo | 250 °/s y 4 m/s² |
 | Usar | Acelerómetro | Mover rápido adelante / atrás | 12 m/s² |
@@ -178,17 +186,20 @@ Todos los umbrales se cambian en la pausa general (por celular).
 Los dB del micrófono son relativos al máximo del micrófono (0 dB = saturado), no
 decibeles reales de la sala: cambian de un celular a otro.
 
-### Gestos que no pueden estar en el mismo celular
+### Controles que no pueden estar en el mismo celular
 
 | Gesto | Controles / sensores que lo usan |
 | --- | --- |
 | Inclinar adelante / atrás | Moverse, Correr (giroscopio y acelerómetro), Usar (giroscopio) |
 | Inclinar a los lados | Lateral (giroscopio y acelerómetro), Disparar (giroscopio) |
 | Movimiento brusco | Disparar y Usar (giroscopio y acelerómetro) |
-| Volumen del micrófono | Lateral, Disparar, Usar, Correr (micrófono) |
-| Frecuencia del micrófono | Moverse, Mapa (micrófono) |
+| Micrófono | Cualquier control con micrófono: **solo uno por celular** (un sonido tiene volumen y frecuencia a la vez) |
+| Dedo extra en la pantalla | Disparar táctil y Correr táctil |
 
-Los gestos táctiles están pensados para usarse a la vez y no se bloquean.
+Además, **Disparar táctil y Usar táctil** solo pueden estar juntos si el celular también tiene
+el joystick (Moverse o Lateral táctil): sin joystick, el primer dedo dispara y el doble toque
+también dispararía. Por lo mismo, no se puede soltar el joystick (ni cambiarle el sensor) si
+deja esa combinación. Los demás gestos táctiles están pensados para usarse a la vez.
 
 ## 6. Archivos
 

@@ -27,15 +27,44 @@ button { padding: 6px 12px; }
 
 #qr img, #qr canvas { display: block; }
 
+/* Durante la partida el PC solo muestra el juego (centrado) y, a la
+   derecha, una columna por jugador. */
+body.pc.jugando {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body.pc.jugando > h1 { display: none; }
+body.pc.jugando > #conexion:not(.error) { display: none; }
+body.pc.jugando > p { flex: none; margin: 4px 8px; }
+
+#juego:not([hidden]) {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.zona-juego {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  container-type: size;
+}
+
 /* DOOM dibuja 320x200 con píxeles no cuadrados: se muestra en 4:3. */
 .pantalla {
   position: relative;
-  width: min(100%, calc((100vh - 140px) * 4 / 3));
+  width: min(100cqw, 100cqh * 4 / 3);
   aspect-ratio: 4 / 3;
   background: #000;
 }
-
-.pantalla:fullscreen { width: 100%; }
 
 #canvas {
   display: block;
@@ -67,23 +96,6 @@ button { padding: 6px 12px; }
 .celular input, .celular select { font-size: 16px; padding: 6px; }
 
 
-.tarjeta {
-  border: 1px solid #ccc;
-  padding: 8px;
-  margin-bottom: 12px;
-}
-
-.tarjeta h2 { font-size: 1.1em; margin: 0 0 4px; }
-
-.indicador { font-family: monospace; font-size: 1.2em; }
-.indicador.activo { font-weight: bold; }
-
-.botones {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
 /* Botones táctiles grandes, sin zoom ni selección al mantenerlos presionados. */
 button.tactil {
   flex: 1 1 30%;
@@ -109,7 +121,7 @@ button.tactil {
 
 /* ---------- Partida en el celular ---------- */
 
-/* Lobby, pausa y partida ocupan toda la pantalla, sin scroll. */
+/* Todas las vistas del celular ocupan la pantalla completa, sin scroll. */
 body.celular.fija {
   position: fixed;
   inset: 0;
@@ -126,6 +138,7 @@ body.celular.fija {
 body.celular.fija #mensaje { flex: none; margin: 8px 8px 0; }
 body.celular.fija #mensaje:empty { display: none; }
 
+body.celular.fija #vista-unirse:not([hidden]),
 body.celular.fija #vista-lobby:not([hidden]),
 body.celular.fija #vista-juego:not([hidden]) {
   display: flex;
@@ -137,7 +150,12 @@ body.celular.fija #vista-juego:not([hidden]) {
   box-sizing: border-box;
 }
 
-/* ---------- Lobby y pausa general en el celular ---------- */
+/* Unirse: formulario centrado */
+body.celular.fija #vista-unirse:not([hidden]) { justify-content: center; }
+#vista-unirse h1 { margin: 0; }
+#vista-unirse input { width: 100%; box-sizing: border-box; }
+
+/* ---------- Lobby, calibración y pausa general en el celular ---------- */
 
 .cabecera { flex: none; }
 .cabecera p { margin: 4px 0 0; }
@@ -204,33 +222,28 @@ span.col-sensor { font-size: 0.9em; color: #555; }
 .fila-ajuste small { color: #555; }
 .fila-ajuste input[type=number] { width: 100%; box-sizing: border-box; }
 .fila-ajuste input[type=checkbox] { justify-self: end; width: 24px; height: 24px; }
-#lista-invertir, #lista-ajustes { display: flex; flex-direction: column; gap: 6px; }
+#lista-invertir { display: flex; flex-direction: column; gap: 6px; flex: none; }
+
+/* Los umbrales se reparten el espacio que queda: nunca hay scroll. */
+#lista-ajustes {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  gap: 4px;
+  flex: 1 1 auto;
+  min-height: 0;
+  font-size: min(1em, 2.2vh);
+}
 
 .pie { flex: none; display: flex; flex-direction: column; gap: 6px; }
 .pie p { margin: 0; min-height: 2.5em; font-size: 0.85em; }
-.boton-listo { min-height: 44px; font-size: 1.1em; }
+.botones-pie { display: flex; gap: 6px; }
+.botones-pie button { min-height: 44px; }
+.botones-pie button[hidden] { display: none; }
+.boton-listo { flex: 1; font-size: 1.1em; }
 .boton-listo.activo { background: #111; color: #fff; }
 
-/* ---------- Partida en el celular ---------- */
-
-.teclas { display: flex; flex-wrap: wrap; gap: 8px; flex: none; }
-.grupo-teclas { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
-
-.tecla {
-  display: inline-block;
-  min-width: 2em;
-  padding: 2px 6px;
-  border: 1px solid #999;
-  font-family: monospace;
-  text-align: center;
-}
-
-.tecla.activa { background: #111; color: #fff; }
-
-/* Tarjetas de controles con sensores: si no hay zona táctil, ocupan el espacio libre */
-#tarjetas { flex: 1 1 auto; min-height: 0; overflow: hidden; }
-#tarjetas:empty { flex: none; }
-#tarjetas .tarjeta { margin-bottom: 8px; }
+/* ---------- Partida en el celular: solo elementos táctiles ---------- */
 
 /* Zona del joystick virtual, dos dedos y doble toque: ocupa el resto de la pantalla */
 .zona-tactil {
@@ -246,8 +259,6 @@ span.col-sensor { font-size: 0.9em; color: #555; }
 }
 
 .zona-tactil[hidden] { display: none; }
-#tarjetas:has(~ .zona-tactil:not([hidden])) { flex: none; }
-.zona-tactil p { padding: 8px; margin: 0; }
 
 .joystick-base, .joystick-perilla {
   position: absolute;
@@ -284,7 +295,38 @@ span.col-sensor { font-size: 0.9em; color: #555; }
 .carrusel button.tactil { flex: 0 0 64px; }
 #arma-actual { flex: 1 1 auto; text-align: center; }
 
-/* ---------- Jugadores en acción (PC) ---------- */
+/* ---------- Columnas de jugadores (PC, a la derecha del juego) ---------- */
 
-.acciones { display: flex; flex-direction: column; gap: 6px; }
-.accion-jugador { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.acciones {
+  flex: none;
+  display: flex;
+  gap: 4px;
+  padding: 8px;
+  overflow: hidden;
+  font-size: 0.85em;
+}
+
+.acciones:empty { display: none; }
+
+.columna {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 7.5em;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.columna > strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.accion {
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+  border: 1px solid #999;
+}
+
+.accion small { color: #555; }
+.accion b { font-family: monospace; }
+.accion.activa { background: #111; color: #fff; }
+.accion.activa small { color: #ccc; }

@@ -45,51 +45,45 @@
       <button type="button" id="continuar" disabled hidden>Continuar partida guardada</button>
       <span class="motivo aviso"></span>
     </p>
+    <p class="aviso">
+      En la partida, el teclado del PC solo maneja el menú: <strong>Esc</strong> lo abre (elige <em>New Game</em>),
+      <strong>flechas o WASD</strong> lo recorren, <strong>Enter</strong> acepta y <strong>Espacio</strong> abre la pausa general.
+    </p>
   </section>
 
-  <!-- Juego: el motor de DOOM dibuja en el canvas -->
+  <!-- Juego: DOOM al centro y, a la derecha, una columna por jugador -->
   <section id="juego" hidden>
-    <div class="pantalla" id="pantalla">
-      <canvas id="canvas" width="320" height="200" tabindex="-1"
-              oncontextmenu="event.preventDefault()"></canvas>
+    <div class="zona-juego">
+      <div class="pantalla" id="pantalla">
+        <canvas id="canvas" width="320" height="200" tabindex="-1"
+                oncontextmenu="event.preventDefault()"></canvas>
 
-      <div class="overlay" id="overlay">
-        <p id="estado-motor">Cargando…</p>
-        <progress id="progreso" max="100" value="0" hidden></progress>
-      </div>
+        <div class="overlay" id="overlay">
+          <p id="estado-motor">Cargando…</p>
+          <progress id="progreso" max="100" value="0" hidden></progress>
+        </div>
 
-      <!-- Pausa general: DOOM se detiene y los celulares pueden cambiar controles y ajustes -->
-      <div class="pausa" id="pausa" hidden>
-        <h2>Pausa general</h2>
-        <p id="motivo-pausa"></p>
-        <ul class="lista-jugadores"></ul>
-        <table>
-          <thead>
-            <tr><th>Control</th><th>Jugador</th><th>Sensor</th></tr>
-          </thead>
-          <tbody class="tabla-controles"></tbody>
-        </table>
-        <p>
-          <button type="button" id="reanudar" disabled>Continuar (Espacio)</button>
-          <button type="button" id="volver-lobby">Volver al lobby (guarda la partida)</button>
-        </p>
-        <p class="motivo"></p>
+        <!-- Pausa general: DOOM se detiene y los celulares pueden cambiar controles y ajustes -->
+        <div class="pausa" id="pausa" hidden>
+          <h2>Pausa general</h2>
+          <p id="motivo-pausa"></p>
+          <ul class="lista-jugadores"></ul>
+          <table>
+            <thead>
+              <tr><th>Control</th><th>Jugador</th><th>Sensor</th></tr>
+            </thead>
+            <tbody class="tabla-controles"></tbody>
+          </table>
+          <p>
+            <button type="button" id="reanudar" disabled>Continuar (Espacio)</button>
+            <button type="button" id="volver-lobby">Volver al lobby (guarda la partida)</button>
+          </p>
+          <p class="motivo"></p>
+        </div>
       </div>
     </div>
 
-    <p>
-      <button type="button" id="pantalla-completa">Pantalla completa</button>
-      Sala <strong id="codigo-sala-juego"></strong>
-    </p>
-    <h2>Jugadores en acción</h2>
     <div id="acciones" class="acciones"></div>
-    <p class="aviso">
-      Teclado del PC: <strong>Esc</strong> abre el menú de DOOM ·
-      <strong>flechas o WASD</strong> lo recorren · <strong>Enter</strong> acepta ·
-      <strong>Y / N</strong> responden · <strong>Espacio</strong> abre o cierra la pausa general.
-      El personaje se controla solo desde los celulares.
-    </p>
-    <p id="registro" class="aviso"></p>
   </section>
 
   <script src="https://unpkg.com/mqtt@5.10.1/dist/mqtt.min.js"></script>

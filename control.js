@@ -17,7 +17,6 @@
   var TOQUE_MAX_MS = 300;         // un toque dura menos que esto…
   var TOQUE_MAX_PX = 15;          // …y casi no se mueve
   var DEDOS_JUNTOS_PX = 25;       // desplazamiento mínimo para "2 dedos deslizando"
-  var ESPERA_DOS_DEDOS = 150;     // ms para distinguir correr de disparar
   var INTERVALO_SENSORES = 40;    // ms entre lecturas de sensores
   var INTERVALO_PING = 2000;      // ms entre avisos de "sigo conectado" al PC
 
@@ -53,6 +52,7 @@
   var firmaJuego = '';        // controles + sensores dibujados en la vista de juego
   var firmaAjustes = null;    // controles + sensores dibujados en los ajustes
   var misControles = [];      // estado de cada control propio durante la partida
+  var calibrando = false;     // fase de calibración (después de "Estoy listo")
 
   // ----------------------------------------------------------- vistas
 
@@ -60,8 +60,7 @@
     ['vista-unirse', 'vista-lobby', 'vista-juego'].forEach(function (v) {
       $(v).hidden = v !== id;
     });
-    // Durante la partida la página ocupa toda la pantalla, sin scroll.
-    document.body.classList.toggle('fija', id === 'vista-juego' || id === 'vista-lobby');
+    // Todas las vistas ocupan la pantalla completa, sin scroll (body.fija).
     window.scrollTo(0, 0);
   }
 
@@ -173,6 +172,7 @@
       if (e.fase === 'lobby') restaurarElecciones();
       dibujarLobby();
     } else if (e.fase === 'juego') {
+      calibrando = false;
       mensaje(controlesPropios().length ? '' : 'No tienes controles: podrás elegir en la próxima pausa general.');
       mostrarVista('vista-juego');
       dibujarJuego();
@@ -202,28 +202,48 @@
     if (restaurado) return;
     restaurado = true;
     if (asignacionesPropias().length) return;
+    // En el orden de CONTROLES: el joystick (Moverse / Lateral) va primero.
     var pedidos = [];
-    Object.keys(preferencias).forEach(function (controlId) {
-      var c = D.control(controlId);
+    D.CONTROLES.forEach(function (c) {
+      var controlId = c.id;
       var sensor = preferencias[controlId];
-      if (!c || duenoDe(controlId) || c.sensores.indexOf(sensor) < 0 || !sensorDisponible(sensor)) return;
+      if (!sensor || duenoDe(controlId) || c.sensores.indexOf(sensor) < 0 || !sensorDisponible(sensor)) return;
       if (D.conflicto(pedidos, controlId, sensor)) return;
       pedidos.push({ control: controlId, sensor: sensor });
       pedir('elegir', { control: controlId, sensor: sensor });
     });
   }
 
-  // Lobby y pausa general, a pantalla completa: pestaña "Controles" (una
-  // fila compacta por control) y, en la pausa, pestaña "Ajustes".
+  // Lobby y pausa general, a pantalla completa: pestañas "Controles" (una
+  // fila compacta por control) y "Ajustes". Durante la calibración solo se
+  // ve el panel de ajustes.
   var pestana = 'controles';
+  var AYUDA_LOBBY = 'Toca un control para ver su gesto. No puedes tener dos controles que interfieran.';
+  var AYUDA_CALIBRACION = 'Sostén el celular como lo vas a usar (toca Recalibrar si cambias de postura) ' +
+    'y ajusta los umbrales mirando la lectura en vivo. Luego confirma.';
 
   function mostrarPestana(nombre) {
     pestana = nombre;
-    $('panel-controles').hidden = nombre !== 'controles';
-    $('panel-ajustes').hidden = nombre !== 'ajustes';
+    $('panel-controles').hidden = calibrando || nombre !== 'controles';
+    $('panel-ajustes').hidden = !calibrando && nombre !== 'ajustes';
     Array.prototype.forEach.call(document.querySelectorAll('#pestanas button'), function (b) {
       b.classList.toggle('activa', b.getAttribute('data-pestana') === nombre);
     });
+  }
+
+  // Fase de calibración: se abre al tocar "Estoy listo" (con los permisos ya
+  // dados) y fija la posición neutral. El jugador queda listo al confirmar.
+  function entrarCalibracion() {
+    calibrando = true;
+    calibrar();
+    $('ayuda-control').textContent = AYUDA_CALIBRACION;
+    dibujarLobby();
+  }
+
+  function salirCalibracion() {
+    calibrando = false;
+    $('ayuda-control').textContent = AYUDA_LOBBY;
+    dibujarLobby();
   }
 
   // Una sola línea al pie con el gesto del control que se está mirando.
@@ -234,12 +254,12 @@
 
   function dibujarLobby() {
     var enPausa = estado.fase === 'pausa';
-    $('titulo-lobby').textContent = enPausa ? 'Pausa general' : 'Lobby';
-    $('motivo-pausa').textContent = enPausa ? estado.motivoPausa || '' : '';
+    $('titulo-lobby').textContent = calibrando ? 'Calibración' : enPausa ? 'Pausa general' : 'Lobby';
+    $('motivo-pausa').textContent = enPausa && !calibrando ? estado.motivoPausa || '' : '';
     $('lobby-sala').textContent = sala;
     $('activar-sensores').hidden = !necesitaPermisoMovimiento || permisoMovimiento;
-    $('pestanas').hidden = !enPausa;
-    if (!enPausa && pestana !== 'controles') mostrarPestana('controles');
+    $('pestanas').hidden = calibrando;
+    mostrarPestana(pestana);
 
     var propias = asignacionesPropias();
     var lista = $('lista-controles');
@@ -276,7 +296,7 @@
           opcion.textContent += ' (no disponible)';
         } else if (choque) {
           opcion.disabled = true;
-          opcion.textContent += ' (mismo gesto que ' + D.control(choque).corto + ')';
+          opcion.textContent += ' (' + choque + ')';
         } else if (!primeroValido) {
           primeroValido = s;
         }
@@ -308,6 +328,8 @@
       boton.type = 'button';
       if (mio) {
         boton.addEventListener('click', function () {
+          var problema = D.conflictoAlSoltar(propias, c.id);
+          if (problema) return mensaje('No puedes soltar ' + c.corto + ': ' + problema + '.', true);
           delete preferencias[c.id];
           D.guardar('doomy.preferencias', JSON.stringify(preferencias));
           pedir('soltar', { control: c.id });
@@ -323,15 +345,25 @@
       lista.appendChild(fila);
     });
 
-    if (enPausa) dibujarAjustes(propias);
+    dibujarAjustes(propias);
 
     var listo = estado.jugadores[miId].listo;
-    $('listo').textContent = listo ? '✔ Listo · tocar para cancelar' : 'Estoy listo';
-    $('listo').classList.toggle('activo', !!listo);
+    $('volver-calibracion').hidden = !calibrando;
+    $('listo').textContent = calibrando ? 'Confirmar calibración' : listo ? '✔ Listo · tocar para cancelar' : 'Estoy listo';
+    $('listo').classList.toggle('activo', !!listo && !calibrando);
   }
 
   function alPresionarListo() {
     if (!estado || !estado.jugadores[miId]) return;
+    if (calibrando) {
+      // Confirmar la calibración deja al jugador listo.
+      calibrando = false;
+      $('ayuda-control').textContent = AYUDA_LOBBY;
+      mensaje('');
+      pedir('listo', { valor: true });
+      dibujarLobby();
+      return;
+    }
     if (estado.jugadores[miId].listo) {
       pedir('listo', { valor: false });
       return;
@@ -354,9 +386,8 @@
         if (usados.acelerometro && !lectura.movimiento) {
           return mensaje('Este celular no entrega datos del acelerómetro. Elige otro sensor.', true);
         }
-        calibrar();
         mensaje('');
-        pedir('listo', { valor: true });
+        entrarCalibracion();
       }, pedidos.length ? 600 : 0);
     }).catch(function () {
       mensaje('No se dio permiso para usar los sensores o el micrófono. Elige otro sensor o vuelve a intentarlo.', true);
@@ -629,7 +660,6 @@
     if (!!st.abajo[code] === abajo) return;
     st.abajo[code] = abajo;
     publicar(T.input, { id: miId, c: st.control.id, k: code, d: abajo ? 1 : 0 }, 0);
-    dibujarTeclas();
   }
 
   function soltarControl(st) {
@@ -647,7 +677,6 @@
   // para que se vuelvan a enviar al reconectar.
   function olvidarTeclas() {
     misControles.forEach(function (st) { st.abajo = {}; st.finPulso = 0; });
-    dibujarTeclas();
   }
 
   // dir: 1 = teclas[0], -1 = teclas[1], 0 = ninguna.
@@ -740,7 +769,6 @@
   var punteros = {};       // pointerId -> { x0, y0, x, y, t0, solo }
   var joystickId = null;   // el primer dedo es el joystick
   var ultimoToque = null;  // { x, y, t } para el doble toque
-  var inicioDosDedos = 0;
 
   function tactil(controlId) {
     for (var i = 0; i < misControles.length; i++) {
@@ -763,7 +791,15 @@
     ids.forEach(function (id) { punteros[id].solo = false; });
     punteros[e.pointerId] = { x0: e.clientX, y0: e.clientY, x: e.clientX, y: e.clientY, t0: Date.now(), solo: !ids.length };
     if (joystickId === null && (tactil('mover') || tactil('lateral'))) joystickId = e.pointerId;
-    if (Object.keys(punteros).length === 2) inicioDosDedos = Date.now();
+
+    // Disparar: cada dedo nuevo (que no sea el del joystick) dispara al
+    // instante, aunque ya se esté disparando (se suelta y se vuelve a presionar).
+    var disparar = tactil('disparar');
+    if (disparar && estado && estado.fase === 'juego' && e.pointerId !== joystickId) {
+      var code = disparar.control.teclas[0];
+      if (disparar.abajo[code]) enviar(disparar, code, false);
+      enviar(disparar, code, true);
+    }
     evaluarTactil();
   }
 
@@ -812,21 +848,29 @@
     if (lateral) ponerEje(lateral, dx < -zonaMuerta ? 1 : dx > zonaMuerta ? -1 : 0);
     dibujarJoystick(joy);
 
-    // Dos dedos: juntos hacia arriba = correr; si no, disparar.
     var ids = Object.keys(punteros);
-    var disparar = tactil('disparar'), correr = tactil('correr');
-    var corriendo = false, disparando = false;
-    if (ids.length === 2) {
-      var a = punteros[ids[0]], b = punteros[ids[1]];
-      var ax = a.x - a.x0, ay = a.y - a.y0, bx = b.x - b.x0, by = b.y - b.y0;
-      var la = Math.hypot(ax, ay), lb = Math.hypot(bx, by);
-      var juntos = la > DEDOS_JUNTOS_PX && lb > DEDOS_JUNTOS_PX &&
-        (ax * bx + ay * by) / (la * lb) > 0.8 && (ay + by) / 2 < -DEDOS_JUNTOS_PX;
-      if (correr && juntos) corriendo = true;
-      else if (disparar && (!correr || Date.now() - inicioDosDedos > ESPERA_DOS_DEDOS)) disparando = true;
+
+    // Disparar: se mantiene mientras haya apoyado algún dedo que no sea el
+    // del joystick (el disparo inmediato de cada dedo nuevo está en alApoyar).
+    var disparar = tactil('disparar');
+    if (disparar) {
+      mantener(disparar, ids.some(function (id) { return Number(id) !== joystickId; }));
     }
-    if (correr) mantener(correr, corriendo);
-    if (disparar) mantener(disparar, disparando);
+
+    // Correr: dos dedos deslizando juntos hacia arriba. No puede estar en el
+    // mismo celular que Disparar táctil (ver GESTOS en comun.js).
+    var correr = tactil('correr');
+    if (correr) {
+      var corriendo = false;
+      if (ids.length === 2) {
+        var a = punteros[ids[0]], b = punteros[ids[1]];
+        var ax = a.x - a.x0, ay = a.y - a.y0, bx = b.x - b.x0, by = b.y - b.y0;
+        var la = Math.hypot(ax, ay), lb = Math.hypot(bx, by);
+        corriendo = la > DEDOS_JUNTOS_PX && lb > DEDOS_JUNTOS_PX &&
+          (ax * bx + ay * by) / (la * lb) > 0.8 && (ay + by) / 2 < -DEDOS_JUNTOS_PX;
+      }
+      mantener(correr, corriendo);
+    }
   }
 
   function dibujarJoystick(joy) {
@@ -899,45 +943,14 @@
       return { control: p.control, sensor: p.sensor, abajo: {}, valor: 0, bloqueo: 0, finPulso: 0, arma: 2 };
     });
 
-    // Tarjetas de los controles que no son táctiles.
-    var tarjetas = $('tarjetas');
-    tarjetas.textContent = '';
-    misControles.forEach(function (st) {
-      if (st.sensor === 'tactil') return;
-      var tarjeta = elemento('div', null, 'tarjeta');
-      tarjeta.appendChild(elemento('h2', st.control.nombre + ' · ' + D.SENSORES[st.sensor]));
-      tarjeta.appendChild(elemento('p', D.descripcion(st.control.id, st.sensor), 'aviso'));
-      tarjetas.appendChild(tarjeta);
-    });
-
-    // Elementos táctiles.
-    var ayuda = [];
-    ['mover', 'lateral', 'disparar', 'usar', 'correr'].forEach(function (id) {
-      if (tactil(id)) ayuda.push(D.control(id).nombre + ': ' + D.descripcion(id, 'tactil'));
-    });
-    $('zona-tactil').hidden = !ayuda.length;
-    $('ayuda-tactil').textContent = ayuda.join(' · ');
+    // Pantalla limpia: solo los elementos táctiles. Los controles con
+    // sensores (y el micrófono) no muestran nada durante la partida.
+    $('zona-tactil').hidden = !['mover', 'lateral', 'disparar', 'usar', 'correr'].some(tactil);
 
     var arma = tactil('arma');
     $('carrusel').hidden = !arma;
     if (arma) $('arma-actual').textContent = arma.arma + ' · ' + D.ARMAS[arma.arma - 1];
     $('boton-mapa').hidden = !tactil('mapa');
-
-    dibujarTeclas();
-  }
-
-  // Indicadores: qué tecla de DOOM está presionando este celular.
-  function dibujarTeclas() {
-    var contenedor = $('teclas');
-    contenedor.textContent = '';
-    misControles.forEach(function (st) {
-      var grupo = elemento('div', null, 'grupo-teclas');
-      grupo.appendChild(elemento('span', st.control.nombre, 'aviso'));
-      st.control.teclas.forEach(function (code) {
-        grupo.appendChild(elemento('span', D.NOMBRES_TECLAS[code] || code, st.abajo[code] ? 'tecla activa' : 'tecla'));
-      });
-      contenedor.appendChild(grupo);
-    });
   }
 
   // ------------------------------------------------ pantalla encendida
@@ -974,6 +987,7 @@
     conectar();
   });
   $('listo').addEventListener('click', alPresionarListo);
+  $('volver-calibracion').addEventListener('click', salirCalibracion);
   $('activar-sensores').addEventListener('click', function () {
     pedirPermisoMovimiento().then(function () { if (estado) dibujarLobby(); })
       .catch(function () { mensaje('No se dio permiso para usar los sensores de movimiento.', true); });
