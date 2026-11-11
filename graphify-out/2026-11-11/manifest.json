@@ -1,0 +1,836 @@
+{
+  "comun.js": {
+    "mtime": 1794165254.5689194,
+    "seen": 1794167003.3614626,
+    "ast_hash": "06935efd7be6f89af5596315cb4ee03a",
+    "semantic_hash": "06935efd7be6f89af5596315cb4ee03a"
+  },
+  "config.js": {
+    "mtime": 1793925543.6810699,
+    "seen": 1794167003.3614695,
+    "ast_hash": "0016d745ff76a9ea091bf49f75960467",
+    "semantic_hash": "0016d745ff76a9ea091bf49f75960467"
+  },
+  "control.js": {
+    "mtime": 1794165353.6856868,
+    "seen": 1794167003.3614724,
+    "ast_hash": "0fbcbcc47cc88d4512092c86a7767070",
+    "semantic_hash": "0fbcbcc47cc88d4512092c86a7767070"
+  },
+  "doom/build-web.sh": {
+    "mtime": 1794002652.9608853,
+    "seen": 1794167003.361474,
+    "ast_hash": "aacf12eea491321df4265be864c9a411",
+    "semantic_hash": "aacf12eea491321df4265be864c9a411"
+  },
+  "doom/doom.js": {
+    "mtime": 1794003412.2331078,
+    "seen": 1794167003.3614755,
+    "ast_hash": "62bcdce20ad851f338b7a4082577cf99",
+    "semantic_hash": "62bcdce20ad851f338b7a4082577cf99"
+  },
+  "doom/linuxdoom-1.10/am_map.c": {
+    "mtime": 1789651331.9708683,
+    "seen": 1794167003.3614771,
+    "ast_hash": "41dd9b2c99eb0b5abc594650e6b092e2",
+    "semantic_hash": "41dd9b2c99eb0b5abc594650e6b092e2"
+  },
+  "doom/linuxdoom-1.10/am_map.h": {
+    "mtime": 1789651331.9715197,
+    "seen": 1794167003.3614783,
+    "ast_hash": "9c8dbbd1e723529e74286a9b33ad7b1b",
+    "semantic_hash": "9c8dbbd1e723529e74286a9b33ad7b1b"
+  },
+  "doom/linuxdoom-1.10/d_englsh.h": {
+    "mtime": 1789651331.9720166,
+    "seen": 1794167003.3614795,
+    "ast_hash": "c6fac3464e72c29ad836115868cf0bcf",
+    "semantic_hash": "c6fac3464e72c29ad836115868cf0bcf"
+  },
+  "doom/linuxdoom-1.10/d_event.h": {
+    "mtime": 1789651331.9720166,
+    "seen": 1794167003.361481,
+    "ast_hash": "427ca50ca1821a274a22b8d3a901c206",
+    "semantic_hash": "427ca50ca1821a274a22b8d3a901c206"
+  },
+  "doom/linuxdoom-1.10/d_french.h": {
+    "mtime": 1789651331.973014,
+    "seen": 1794167003.361482,
+    "ast_hash": "e00f9566add908e4423043b769fcdbd6",
+    "semantic_hash": "e00f9566add908e4423043b769fcdbd6"
+  },
+  "doom/linuxdoom-1.10/d_items.c": {
+    "mtime": 1789651331.9740143,
+    "seen": 1794167003.3614833,
+    "ast_hash": "e1003cf04f2f247764f6951cac5cee9b",
+    "semantic_hash": "e1003cf04f2f247764f6951cac5cee9b"
+  },
+  "doom/linuxdoom-1.10/d_items.h": {
+    "mtime": 1789651331.9740143,
+    "seen": 1794167003.3614848,
+    "ast_hash": "f19ac99765a816728ef2eace7e276d6b",
+    "semantic_hash": "f19ac99765a816728ef2eace7e276d6b"
+  },
+  "doom/linuxdoom-1.10/d_main.c": {
+    "mtime": 1793723957.4633331,
+    "seen": 1794167003.3614862,
+    "ast_hash": "70f3dd0be4e4b584b6b40e87f6edb8f0",
+    "semantic_hash": "70f3dd0be4e4b584b6b40e87f6edb8f0"
+  },
+  "doom/linuxdoom-1.10/d_main.h": {
+    "mtime": 1789651331.9750164,
+    "seen": 1794167003.3614872,
+    "ast_hash": "a59cc38e2caeff76bf3901216b3fd52a",
+    "semantic_hash": "a59cc38e2caeff76bf3901216b3fd52a"
+  },
+  "doom/linuxdoom-1.10/d_net.c": {
+    "mtime": 1793723453.1440313,
+    "seen": 1794167003.361488,
+    "ast_hash": "58f60bdf88f5ae8493a4799e1449c0f9",
+    "semantic_hash": "58f60bdf88f5ae8493a4799e1449c0f9"
+  },
+  "doom/linuxdoom-1.10/d_net.h": {
+    "mtime": 1789651331.9760263,
+    "seen": 1794167003.3614893,
+    "ast_hash": "24fed30c606bc5921822f0bfb0ffbbc2",
+    "semantic_hash": "24fed30c606bc5921822f0bfb0ffbbc2"
+  },
+  "doom/linuxdoom-1.10/d_player.h": {
+    "mtime": 1789651331.9760263,
+    "seen": 1794167003.3614905,
+    "ast_hash": "1ca79718f6475cfb7585886f458e8e04",
+    "semantic_hash": "1ca79718f6475cfb7585886f458e8e04"
+  },
+  "doom/linuxdoom-1.10/d_textur.h": {
+    "mtime": 1789651331.9772348,
+    "seen": 1794167003.3614917,
+    "ast_hash": "02d5031c517be8ae2daa930dfb785db7",
+    "semantic_hash": "02d5031c517be8ae2daa930dfb785db7"
+  },
+  "doom/linuxdoom-1.10/d_think.h": {
+    "mtime": 1789651331.9772348,
+    "seen": 1794167003.3614926,
+    "ast_hash": "9920949f9c99c3ce99a89018eee5d8a4",
+    "semantic_hash": "9920949f9c99c3ce99a89018eee5d8a4"
+  },
+  "doom/linuxdoom-1.10/d_ticcmd.h": {
+    "mtime": 1789651331.978233,
+    "seen": 1794167003.3614938,
+    "ast_hash": "3af0e1c74b31e372518c9fa55d5e929b",
+    "semantic_hash": "3af0e1c74b31e372518c9fa55d5e929b"
+  },
+  "doom/linuxdoom-1.10/doomdata.h": {
+    "mtime": 1789651331.978233,
+    "seen": 1794167003.361495,
+    "ast_hash": "f7d29b5531e31e8a43b70931bae3259e",
+    "semantic_hash": "f7d29b5531e31e8a43b70931bae3259e"
+  },
+  "doom/linuxdoom-1.10/doomdef.c": {
+    "mtime": 1789651331.978233,
+    "seen": 1794167003.3614962,
+    "ast_hash": "ed411bce72f52547ccf8f8b686fa2052",
+    "semantic_hash": "ed411bce72f52547ccf8f8b686fa2052"
+  },
+  "doom/linuxdoom-1.10/doomdef.h": {
+    "mtime": 1789651331.979483,
+    "seen": 1794167003.3614979,
+    "ast_hash": "2729db3148a2a89197ead104dce78b8a",
+    "semantic_hash": "2729db3148a2a89197ead104dce78b8a"
+  },
+  "doom/linuxdoom-1.10/doomstat.c": {
+    "mtime": 1789651331.979483,
+    "seen": 1794167003.3614988,
+    "ast_hash": "5c5f7ed6f303d5e1aedbbcff74d050e1",
+    "semantic_hash": "5c5f7ed6f303d5e1aedbbcff74d050e1"
+  },
+  "doom/linuxdoom-1.10/doomstat.h": {
+    "mtime": 1789651331.9804823,
+    "seen": 1794167003.3615005,
+    "ast_hash": "a5447b984166b16f905dd554283e5814",
+    "semantic_hash": "a5447b984166b16f905dd554283e5814"
+  },
+  "doom/linuxdoom-1.10/doomtype.h": {
+    "mtime": 1789651331.9804823,
+    "seen": 1794167003.3615015,
+    "ast_hash": "0021bf7ed8e1ba3b600247a377ba5b62",
+    "semantic_hash": "0021bf7ed8e1ba3b600247a377ba5b62"
+  },
+  "doom/linuxdoom-1.10/doomy_web.c": {
+    "mtime": 1794003396.3849523,
+    "seen": 1794167003.3615026,
+    "ast_hash": "6c3256c2be0d3ba61aa1441bd2f54fed",
+    "semantic_hash": "6c3256c2be0d3ba61aa1441bd2f54fed"
+  },
+  "doom/linuxdoom-1.10/dstrings.c": {
+    "mtime": 1789651331.9804823,
+    "seen": 1794167003.3615038,
+    "ast_hash": "edfa4d9d9d14641eb5a1aa227d423b2f",
+    "semantic_hash": "edfa4d9d9d14641eb5a1aa227d423b2f"
+  },
+  "doom/linuxdoom-1.10/dstrings.h": {
+    "mtime": 1789651331.9818277,
+    "seen": 1794167003.361505,
+    "ast_hash": "11d29bffeb4170f539752c9a801493e0",
+    "semantic_hash": "11d29bffeb4170f539752c9a801493e0"
+  },
+  "doom/linuxdoom-1.10/f_finale.c": {
+    "mtime": 1789651331.9818277,
+    "seen": 1794167003.3615062,
+    "ast_hash": "2ef6cfb8b0a30cb7ede4de66fb96a795",
+    "semantic_hash": "2ef6cfb8b0a30cb7ede4de66fb96a795"
+  },
+  "doom/linuxdoom-1.10/f_finale.h": {
+    "mtime": 1789651331.9828389,
+    "seen": 1794167003.3615077,
+    "ast_hash": "db6ec438c272c44d4c296dc823dc7220",
+    "semantic_hash": "db6ec438c272c44d4c296dc823dc7220"
+  },
+  "doom/linuxdoom-1.10/f_wipe.c": {
+    "mtime": 1789651331.9828389,
+    "seen": 1794167003.3615086,
+    "ast_hash": "33f127a023bcd993b663ec2859692d3b",
+    "semantic_hash": "33f127a023bcd993b663ec2859692d3b"
+  },
+  "doom/linuxdoom-1.10/f_wipe.h": {
+    "mtime": 1789651331.9838738,
+    "seen": 1794167003.3615098,
+    "ast_hash": "87965cef3000b737cc195d8254c3770f",
+    "semantic_hash": "87965cef3000b737cc195d8254c3770f"
+  },
+  "doom/linuxdoom-1.10/g_game.c": {
+    "mtime": 1789651331.9848726,
+    "seen": 1794167003.361511,
+    "ast_hash": "8bc79712cdd1da713a6ad15d7449615e",
+    "semantic_hash": "8bc79712cdd1da713a6ad15d7449615e"
+  },
+  "doom/linuxdoom-1.10/g_game.h": {
+    "mtime": 1789651331.9848726,
+    "seen": 1794167003.3615122,
+    "ast_hash": "922edce80132f9e749ebf1c210acea51",
+    "semantic_hash": "922edce80132f9e749ebf1c210acea51"
+  },
+  "doom/linuxdoom-1.10/hu_lib.c": {
+    "mtime": 1789651331.9848726,
+    "seen": 1794167003.3615131,
+    "ast_hash": "c9460a06b9947ce761a8f6cff5a5b02c",
+    "semantic_hash": "c9460a06b9947ce761a8f6cff5a5b02c"
+  },
+  "doom/linuxdoom-1.10/hu_lib.h": {
+    "mtime": 1789651331.9863794,
+    "seen": 1794167003.3615146,
+    "ast_hash": "ae1bac179efac4db1aea1de93a7e0442",
+    "semantic_hash": "ae1bac179efac4db1aea1de93a7e0442"
+  },
+  "doom/linuxdoom-1.10/hu_stuff.c": {
+    "mtime": 1789651331.9863794,
+    "seen": 1794167003.3615155,
+    "ast_hash": "7808515606c6192d11214871b59f5de9",
+    "semantic_hash": "7808515606c6192d11214871b59f5de9"
+  },
+  "doom/linuxdoom-1.10/hu_stuff.h": {
+    "mtime": 1789651331.9863794,
+    "seen": 1794167003.3615167,
+    "ast_hash": "89a893950b4e895f8f31da485856ebb7",
+    "semantic_hash": "89a893950b4e895f8f31da485856ebb7"
+  },
+  "doom/linuxdoom-1.10/i_main.c": {
+    "mtime": 1789651331.9877858,
+    "seen": 1794167003.3615181,
+    "ast_hash": "ffe603bc930ada831aa604f2113e6133",
+    "semantic_hash": "ffe603bc930ada831aa604f2113e6133"
+  },
+  "doom/linuxdoom-1.10/i_net.c": {
+    "mtime": 1789651331.9877858,
+    "seen": 1794167003.3615193,
+    "ast_hash": "0e44a46f9dcb35e28e666105d176cd3a",
+    "semantic_hash": "0e44a46f9dcb35e28e666105d176cd3a"
+  },
+  "doom/linuxdoom-1.10/i_net.h": {
+    "mtime": 1789651331.9891045,
+    "seen": 1794167003.3615203,
+    "ast_hash": "f3cb814164c45b57a92fc9109b45dd2d",
+    "semantic_hash": "f3cb814164c45b57a92fc9109b45dd2d"
+  },
+  "doom/linuxdoom-1.10/i_sound.c": {
+    "mtime": 1789651331.9891045,
+    "seen": 1794167003.3615215,
+    "ast_hash": "abb13f27ee03dff1c562ddd24e31a659",
+    "semantic_hash": "abb13f27ee03dff1c562ddd24e31a659"
+  },
+  "doom/linuxdoom-1.10/i_sound.h": {
+    "mtime": 1789651331.9891045,
+    "seen": 1794167003.3615232,
+    "ast_hash": "532ba994c69bf90f3c380376fadf70d8",
+    "semantic_hash": "532ba994c69bf90f3c380376fadf70d8"
+  },
+  "doom/linuxdoom-1.10/i_sound_web.c": {
+    "mtime": 1793723957.467065,
+    "seen": 1794167003.361524,
+    "ast_hash": "0b8a0ad5d27a2a8b193f7c04db71c7d1",
+    "semantic_hash": "0b8a0ad5d27a2a8b193f7c04db71c7d1"
+  },
+  "doom/linuxdoom-1.10/i_system.c": {
+    "mtime": 1793723453.104375,
+    "seen": 1794167003.3615255,
+    "ast_hash": "e0c362f0fa1c173e1331e15978130643",
+    "semantic_hash": "e0c362f0fa1c173e1331e15978130643"
+  },
+  "doom/linuxdoom-1.10/i_system.h": {
+    "mtime": 1789651331.9901042,
+    "seen": 1794167003.3615265,
+    "ast_hash": "c8304d661cddc805eb591216780fffb3",
+    "semantic_hash": "c8304d661cddc805eb591216780fffb3"
+  },
+  "doom/linuxdoom-1.10/i_video.c": {
+    "mtime": 1789651331.9911034,
+    "seen": 1794167003.361528,
+    "ast_hash": "c489549d4b94c21ad26c3d880849c7de",
+    "semantic_hash": "c489549d4b94c21ad26c3d880849c7de"
+  },
+  "doom/linuxdoom-1.10/i_video.h": {
+    "mtime": 1789651331.9911034,
+    "seen": 1794167003.361529,
+    "ast_hash": "afce8ea8e5419a955be8301619e83887",
+    "semantic_hash": "afce8ea8e5419a955be8301619e83887"
+  },
+  "doom/linuxdoom-1.10/i_video_web.c": {
+    "mtime": 1793723965.6892097,
+    "seen": 1794167003.36153,
+    "ast_hash": "cd807fab0f4fa4aec1b45fa4efa63fa2",
+    "semantic_hash": "cd807fab0f4fa4aec1b45fa4efa63fa2"
+  },
+  "doom/linuxdoom-1.10/info.c": {
+    "mtime": 1789651331.992103,
+    "seen": 1794167003.3615315,
+    "ast_hash": "1a5bc7d4764cd267c122582ea8e6cf4e",
+    "semantic_hash": "1a5bc7d4764cd267c122582ea8e6cf4e"
+  },
+  "doom/linuxdoom-1.10/info.h": {
+    "mtime": 1789651331.993176,
+    "seen": 1794167003.3615324,
+    "ast_hash": "b6ce7c240ada2db6982b460f8a2ef9fb",
+    "semantic_hash": "b6ce7c240ada2db6982b460f8a2ef9fb"
+  },
+  "doom/linuxdoom-1.10/m_argv.c": {
+    "mtime": 1789651331.993176,
+    "seen": 1794167003.3615336,
+    "ast_hash": "c4b3ec0b9e375c873850eb15e9f289a5",
+    "semantic_hash": "c4b3ec0b9e375c873850eb15e9f289a5"
+  },
+  "doom/linuxdoom-1.10/m_argv.h": {
+    "mtime": 1789651331.994375,
+    "seen": 1794167003.3615348,
+    "ast_hash": "9b21d42cbeb9ff361ee8bd83afa08dfa",
+    "semantic_hash": "9b21d42cbeb9ff361ee8bd83afa08dfa"
+  },
+  "doom/linuxdoom-1.10/m_bbox.c": {
+    "mtime": 1789651331.994375,
+    "seen": 1794167003.361536,
+    "ast_hash": "310f1e246943b7697844d087243fc43e",
+    "semantic_hash": "310f1e246943b7697844d087243fc43e"
+  },
+  "doom/linuxdoom-1.10/m_bbox.h": {
+    "mtime": 1789651331.995361,
+    "seen": 1794167003.361537,
+    "ast_hash": "0ac2c976d70f79a5da569382b46eaccf",
+    "semantic_hash": "0ac2c976d70f79a5da569382b46eaccf"
+  },
+  "doom/linuxdoom-1.10/m_cheat.c": {
+    "mtime": 1789651331.995361,
+    "seen": 1794167003.3615384,
+    "ast_hash": "748627ad834dfb553a84264a446da25e",
+    "semantic_hash": "748627ad834dfb553a84264a446da25e"
+  },
+  "doom/linuxdoom-1.10/m_cheat.h": {
+    "mtime": 1789651331.99636,
+    "seen": 1794167003.3615396,
+    "ast_hash": "4c60eed6a6d79e2c15c82b38eff156dc",
+    "semantic_hash": "4c60eed6a6d79e2c15c82b38eff156dc"
+  },
+  "doom/linuxdoom-1.10/m_fixed.c": {
+    "mtime": 1789651331.99636,
+    "seen": 1794167003.3615408,
+    "ast_hash": "cfd759e86dadd03b61226d53aaea9e57",
+    "semantic_hash": "cfd759e86dadd03b61226d53aaea9e57"
+  },
+  "doom/linuxdoom-1.10/m_fixed.h": {
+    "mtime": 1789651331.997362,
+    "seen": 1794167003.361542,
+    "ast_hash": "1b4af8d3e79f228b80e32b12a45f4c3a",
+    "semantic_hash": "1b4af8d3e79f228b80e32b12a45f4c3a"
+  },
+  "doom/linuxdoom-1.10/m_menu.c": {
+    "mtime": 1789651331.997362,
+    "seen": 1794167003.3615432,
+    "ast_hash": "2e2573e959eff64f8883a98477f971b5",
+    "semantic_hash": "2e2573e959eff64f8883a98477f971b5"
+  },
+  "doom/linuxdoom-1.10/m_menu.h": {
+    "mtime": 1789651331.998424,
+    "seen": 1794167003.3615441,
+    "ast_hash": "970aa056a61e463d65a400ac8ebcdf5b",
+    "semantic_hash": "970aa056a61e463d65a400ac8ebcdf5b"
+  },
+  "doom/linuxdoom-1.10/m_misc.c": {
+    "mtime": 1793800024.3312075,
+    "seen": 1794167003.3615456,
+    "ast_hash": "a0c781140f6a0318f3a3980e662efe57",
+    "semantic_hash": "a0c781140f6a0318f3a3980e662efe57"
+  },
+  "doom/linuxdoom-1.10/m_misc.h": {
+    "mtime": 1789651331.998424,
+    "seen": 1794167003.3615468,
+    "ast_hash": "245a82c019c876710ada4efbd2bcafdb",
+    "semantic_hash": "245a82c019c876710ada4efbd2bcafdb"
+  },
+  "doom/linuxdoom-1.10/m_random.c": {
+    "mtime": 1789651331.998424,
+    "seen": 1794167003.3615477,
+    "ast_hash": "1ed4212ba945e189523cdf4c19c0b808",
+    "semantic_hash": "1ed4212ba945e189523cdf4c19c0b808"
+  },
+  "doom/linuxdoom-1.10/m_random.h": {
+    "mtime": 1789651331.9998927,
+    "seen": 1794167003.361549,
+    "ast_hash": "adee2c87f62d1528afe2de09d75df7f0",
+    "semantic_hash": "adee2c87f62d1528afe2de09d75df7f0"
+  },
+  "doom/linuxdoom-1.10/m_swap.c": {
+    "mtime": 1789651331.9998927,
+    "seen": 1794167003.36155,
+    "ast_hash": "17dc74df07ea7041c0d411c1f0b3b8e4",
+    "semantic_hash": "17dc74df07ea7041c0d411c1f0b3b8e4"
+  },
+  "doom/linuxdoom-1.10/m_swap.h": {
+    "mtime": 1789651331.9998927,
+    "seen": 1794167003.3615513,
+    "ast_hash": "0410200e4ca090f5c57a3ac5a4dbdb17",
+    "semantic_hash": "0410200e4ca090f5c57a3ac5a4dbdb17"
+  },
+  "doom/linuxdoom-1.10/p_ceilng.c": {
+    "mtime": 1789651332.0012188,
+    "seen": 1794167003.3615525,
+    "ast_hash": "3be0f1c88c444a9e5a79d9beed822dd3",
+    "semantic_hash": "3be0f1c88c444a9e5a79d9beed822dd3"
+  },
+  "doom/linuxdoom-1.10/p_doors.c": {
+    "mtime": 1789651332.0012188,
+    "seen": 1794167003.3615534,
+    "ast_hash": "737fb5665ba9d600abfc4ea27827cc60",
+    "semantic_hash": "737fb5665ba9d600abfc4ea27827cc60"
+  },
+  "doom/linuxdoom-1.10/p_enemy.c": {
+    "mtime": 1789651332.0026302,
+    "seen": 1794167003.3615546,
+    "ast_hash": "30e77b7c0aef2627b848b68c9cfcffe2",
+    "semantic_hash": "30e77b7c0aef2627b848b68c9cfcffe2"
+  },
+  "doom/linuxdoom-1.10/p_floor.c": {
+    "mtime": 1789651332.0026302,
+    "seen": 1794167003.3615558,
+    "ast_hash": "8b5277384c38ec9e2644b4303287fe11",
+    "semantic_hash": "8b5277384c38ec9e2644b4303287fe11"
+  },
+  "doom/linuxdoom-1.10/p_inter.c": {
+    "mtime": 1789651332.003906,
+    "seen": 1794167003.3615568,
+    "ast_hash": "48994b3ab901db17f9b254ccd02151d2",
+    "semantic_hash": "48994b3ab901db17f9b254ccd02151d2"
+  },
+  "doom/linuxdoom-1.10/p_inter.h": {
+    "mtime": 1789651332.003906,
+    "seen": 1794167003.361558,
+    "ast_hash": "fa8056826f85cd19dc612bf36e47bc78",
+    "semantic_hash": "fa8056826f85cd19dc612bf36e47bc78"
+  },
+  "doom/linuxdoom-1.10/p_lights.c": {
+    "mtime": 1789651332.0051515,
+    "seen": 1794167003.3615594,
+    "ast_hash": "a58e8a63d6e0c21538815cb0e3e91919",
+    "semantic_hash": "a58e8a63d6e0c21538815cb0e3e91919"
+  },
+  "doom/linuxdoom-1.10/p_local.h": {
+    "mtime": 1789651332.0051515,
+    "seen": 1794167003.3615606,
+    "ast_hash": "acacdfdeff0c190d82aad7cb0dea177a",
+    "semantic_hash": "acacdfdeff0c190d82aad7cb0dea177a"
+  },
+  "doom/linuxdoom-1.10/p_map.c": {
+    "mtime": 1789651332.0062456,
+    "seen": 1794167003.3615615,
+    "ast_hash": "9589b52c49858ca780d24f2f69ee64be",
+    "semantic_hash": "9589b52c49858ca780d24f2f69ee64be"
+  },
+  "doom/linuxdoom-1.10/p_maputl.c": {
+    "mtime": 1789651332.0062456,
+    "seen": 1794167003.3615627,
+    "ast_hash": "1fea9df70c84c3123838b45d33748806",
+    "semantic_hash": "1fea9df70c84c3123838b45d33748806"
+  },
+  "doom/linuxdoom-1.10/p_mobj.c": {
+    "mtime": 1789651332.0062456,
+    "seen": 1794167003.361564,
+    "ast_hash": "55b44724a8d0dda7b7363e3e8a5364fa",
+    "semantic_hash": "55b44724a8d0dda7b7363e3e8a5364fa"
+  },
+  "doom/linuxdoom-1.10/p_mobj.h": {
+    "mtime": 1789651332.0074992,
+    "seen": 1794167003.361565,
+    "ast_hash": "6f249b7a7b32b826f06fd83c9cccd894",
+    "semantic_hash": "6f249b7a7b32b826f06fd83c9cccd894"
+  },
+  "doom/linuxdoom-1.10/p_plats.c": {
+    "mtime": 1789651332.0074992,
+    "seen": 1794167003.3615663,
+    "ast_hash": "b82f2d854f5ab0da4bfc1165d6a59e35",
+    "semantic_hash": "b82f2d854f5ab0da4bfc1165d6a59e35"
+  },
+  "doom/linuxdoom-1.10/p_pspr.c": {
+    "mtime": 1789651332.008451,
+    "seen": 1794167003.3615675,
+    "ast_hash": "5fae7ac9d2eeab5a4f7b95efa1b25fb6",
+    "semantic_hash": "5fae7ac9d2eeab5a4f7b95efa1b25fb6"
+  },
+  "doom/linuxdoom-1.10/p_pspr.h": {
+    "mtime": 1789651332.008451,
+    "seen": 1794167003.3615685,
+    "ast_hash": "4c2ca30ef8388944b8d9ad40febd4ebe",
+    "semantic_hash": "4c2ca30ef8388944b8d9ad40febd4ebe"
+  },
+  "doom/linuxdoom-1.10/p_saveg.c": {
+    "mtime": 1789651332.0099556,
+    "seen": 1794167003.36157,
+    "ast_hash": "1d425c00ed247e8a6753d3b219f1c734",
+    "semantic_hash": "1d425c00ed247e8a6753d3b219f1c734"
+  },
+  "doom/linuxdoom-1.10/p_saveg.h": {
+    "mtime": 1789651332.0099556,
+    "seen": 1794167003.3615708,
+    "ast_hash": "a05fcc39b1144dd914e96b58697ed52b",
+    "semantic_hash": "a05fcc39b1144dd914e96b58697ed52b"
+  },
+  "doom/linuxdoom-1.10/p_setup.c": {
+    "mtime": 1789651332.0114052,
+    "seen": 1794167003.3615718,
+    "ast_hash": "d9b0289dad8a1f886d2cb85bad5a363c",
+    "semantic_hash": "d9b0289dad8a1f886d2cb85bad5a363c"
+  },
+  "doom/linuxdoom-1.10/p_setup.h": {
+    "mtime": 1789651332.0114052,
+    "seen": 1794167003.361574,
+    "ast_hash": "74916008d9d52ba890ff2e8f9bf57d35",
+    "semantic_hash": "74916008d9d52ba890ff2e8f9bf57d35"
+  },
+  "doom/linuxdoom-1.10/p_sight.c": {
+    "mtime": 1789651332.0124035,
+    "seen": 1794167003.3615751,
+    "ast_hash": "5856a8a39c1d7c612a042863ac40660b",
+    "semantic_hash": "5856a8a39c1d7c612a042863ac40660b"
+  },
+  "doom/linuxdoom-1.10/p_spec.c": {
+    "mtime": 1789651332.0124035,
+    "seen": 1794167003.361576,
+    "ast_hash": "e3b9a810ad6520e5cb87b7589dac36fc",
+    "semantic_hash": "e3b9a810ad6520e5cb87b7589dac36fc"
+  },
+  "doom/linuxdoom-1.10/p_spec.h": {
+    "mtime": 1789651332.0135345,
+    "seen": 1794167003.3615773,
+    "ast_hash": "2befe1a94a7f9cbe0f0ba81843c728b0",
+    "semantic_hash": "2befe1a94a7f9cbe0f0ba81843c728b0"
+  },
+  "doom/linuxdoom-1.10/p_switch.c": {
+    "mtime": 1789651332.0135345,
+    "seen": 1794167003.3615785,
+    "ast_hash": "4e58804bb05958fa0f9d13a2e165928e",
+    "semantic_hash": "4e58804bb05958fa0f9d13a2e165928e"
+  },
+  "doom/linuxdoom-1.10/p_telept.c": {
+    "mtime": 1789651332.0135345,
+    "seen": 1794167003.3615794,
+    "ast_hash": "5fe588260a4cf863a1f00ea578a6fc2f",
+    "semantic_hash": "5fe588260a4cf863a1f00ea578a6fc2f"
+  },
+  "doom/linuxdoom-1.10/p_tick.c": {
+    "mtime": 1789651332.0150397,
+    "seen": 1794167003.3615808,
+    "ast_hash": "40055028bf3ac447d5f4e7bccb8e2f24",
+    "semantic_hash": "40055028bf3ac447d5f4e7bccb8e2f24"
+  },
+  "doom/linuxdoom-1.10/p_tick.h": {
+    "mtime": 1789651332.0150397,
+    "seen": 1794167003.3615818,
+    "ast_hash": "f4e96a7752ec233ecda49d18c9d27316",
+    "semantic_hash": "f4e96a7752ec233ecda49d18c9d27316"
+  },
+  "doom/linuxdoom-1.10/p_user.c": {
+    "mtime": 1789651332.0165014,
+    "seen": 1794167003.361583,
+    "ast_hash": "e8b67589e12febb74b4936fdc0e3288a",
+    "semantic_hash": "e8b67589e12febb74b4936fdc0e3288a"
+  },
+  "doom/linuxdoom-1.10/r_bsp.c": {
+    "mtime": 1789651332.0165014,
+    "seen": 1794167003.3615842,
+    "ast_hash": "a1f68039526f5a3fca0a66fb93458841",
+    "semantic_hash": "a1f68039526f5a3fca0a66fb93458841"
+  },
+  "doom/linuxdoom-1.10/r_bsp.h": {
+    "mtime": 1789651332.0175023,
+    "seen": 1794167003.3615851,
+    "ast_hash": "a44c21b9e378237a32b82b58c01b1eb7",
+    "semantic_hash": "a44c21b9e378237a32b82b58c01b1eb7"
+  },
+  "doom/linuxdoom-1.10/r_data.c": {
+    "mtime": 1789651332.0175023,
+    "seen": 1794167003.361586,
+    "ast_hash": "71343e1b776e1d6371374c3a6304fe7b",
+    "semantic_hash": "71343e1b776e1d6371374c3a6304fe7b"
+  },
+  "doom/linuxdoom-1.10/r_data.h": {
+    "mtime": 1789651332.0184999,
+    "seen": 1794167003.3615878,
+    "ast_hash": "c19b45340fd1f3ef4c69c439fd6ee3ef",
+    "semantic_hash": "c19b45340fd1f3ef4c69c439fd6ee3ef"
+  },
+  "doom/linuxdoom-1.10/r_defs.h": {
+    "mtime": 1789651332.0184999,
+    "seen": 1794167003.3615887,
+    "ast_hash": "d73b000472d0e98ecaadc280ff7a3f1f",
+    "semantic_hash": "d73b000472d0e98ecaadc280ff7a3f1f"
+  },
+  "doom/linuxdoom-1.10/r_draw.c": {
+    "mtime": 1789651332.0199964,
+    "seen": 1794167003.36159,
+    "ast_hash": "b3656311758c854861a823e23a95dd43",
+    "semantic_hash": "b3656311758c854861a823e23a95dd43"
+  },
+  "doom/linuxdoom-1.10/r_draw.h": {
+    "mtime": 1789651332.0199964,
+    "seen": 1794167003.361591,
+    "ast_hash": "79accfecf7766f9db4cd9fe9c669a5e0",
+    "semantic_hash": "79accfecf7766f9db4cd9fe9c669a5e0"
+  },
+  "doom/linuxdoom-1.10/r_local.h": {
+    "mtime": 1789651332.0199964,
+    "seen": 1794167003.3615923,
+    "ast_hash": "94a09755f1b67764df891d094227433d",
+    "semantic_hash": "94a09755f1b67764df891d094227433d"
+  },
+  "doom/linuxdoom-1.10/r_main.c": {
+    "mtime": 1789651332.0214229,
+    "seen": 1794167003.3615932,
+    "ast_hash": "a55272ac647e553161c1e7f6f1bc3671",
+    "semantic_hash": "a55272ac647e553161c1e7f6f1bc3671"
+  },
+  "doom/linuxdoom-1.10/r_main.h": {
+    "mtime": 1789651332.0214229,
+    "seen": 1794167003.3615944,
+    "ast_hash": "428cb1431174c746cd10dcd683aca5e7",
+    "semantic_hash": "428cb1431174c746cd10dcd683aca5e7"
+  },
+  "doom/linuxdoom-1.10/r_plane.c": {
+    "mtime": 1789651332.0229228,
+    "seen": 1794167003.3615956,
+    "ast_hash": "85fa227d0e0de596ee2134243d266a5a",
+    "semantic_hash": "85fa227d0e0de596ee2134243d266a5a"
+  },
+  "doom/linuxdoom-1.10/r_plane.h": {
+    "mtime": 1789651332.0229228,
+    "seen": 1794167003.3615966,
+    "ast_hash": "d4ddf62a852a938c31f47d129e0159f2",
+    "semantic_hash": "d4ddf62a852a938c31f47d129e0159f2"
+  },
+  "doom/linuxdoom-1.10/r_segs.c": {
+    "mtime": 1789651332.024116,
+    "seen": 1794167003.3615978,
+    "ast_hash": "3b04623e5586cbe57108d96dbb3ed5c4",
+    "semantic_hash": "3b04623e5586cbe57108d96dbb3ed5c4"
+  },
+  "doom/linuxdoom-1.10/r_segs.h": {
+    "mtime": 1789651332.024116,
+    "seen": 1794167003.361599,
+    "ast_hash": "82f9f8e735266f4b3ee3a715ffb0cffe",
+    "semantic_hash": "82f9f8e735266f4b3ee3a715ffb0cffe"
+  },
+  "doom/linuxdoom-1.10/r_sky.c": {
+    "mtime": 1789651332.024116,
+    "seen": 1794167003.3616,
+    "ast_hash": "25e459bcc9cd191c5a2664a3f0fb98dc",
+    "semantic_hash": "25e459bcc9cd191c5a2664a3f0fb98dc"
+  },
+  "doom/linuxdoom-1.10/r_sky.h": {
+    "mtime": 1789651332.025359,
+    "seen": 1794167003.361601,
+    "ast_hash": "058ebdd8d4caa03beae1ce6e6f7f0310",
+    "semantic_hash": "058ebdd8d4caa03beae1ce6e6f7f0310"
+  },
+  "doom/linuxdoom-1.10/r_state.h": {
+    "mtime": 1789651332.025359,
+    "seen": 1794167003.3616023,
+    "ast_hash": "b9191fc5ea0d7f473aacada8aeadaf8f",
+    "semantic_hash": "b9191fc5ea0d7f473aacada8aeadaf8f"
+  },
+  "doom/linuxdoom-1.10/r_things.c": {
+    "mtime": 1789651332.0267036,
+    "seen": 1794167003.3616033,
+    "ast_hash": "2a7c347a7527c491e4553057c46373fd",
+    "semantic_hash": "2a7c347a7527c491e4553057c46373fd"
+  },
+  "doom/linuxdoom-1.10/r_things.h": {
+    "mtime": 1789651332.0267036,
+    "seen": 1794167003.3616045,
+    "ast_hash": "d12891792e50f321e396f80b5c59ad34",
+    "semantic_hash": "d12891792e50f321e396f80b5c59ad34"
+  },
+  "doom/linuxdoom-1.10/s_sound.c": {
+    "mtime": 1789651332.0277028,
+    "seen": 1794167003.3616056,
+    "ast_hash": "0a90ed637b6ceaa5260da81a4e0e7109",
+    "semantic_hash": "0a90ed637b6ceaa5260da81a4e0e7109"
+  },
+  "doom/linuxdoom-1.10/s_sound.h": {
+    "mtime": 1789651332.0277028,
+    "seen": 1794167003.3616068,
+    "ast_hash": "d28e285b985857e121c1e9553519f3ab",
+    "semantic_hash": "d28e285b985857e121c1e9553519f3ab"
+  },
+  "doom/linuxdoom-1.10/sounds.c": {
+    "mtime": 1789651332.0277028,
+    "seen": 1794167003.3616078,
+    "ast_hash": "676211823d7edbe478c93aeb640fd128",
+    "semantic_hash": "676211823d7edbe478c93aeb640fd128"
+  },
+  "doom/linuxdoom-1.10/sounds.h": {
+    "mtime": 1789651332.0289328,
+    "seen": 1794167003.361609,
+    "ast_hash": "b5e60b2eef9593002ea3e96ed4da538d",
+    "semantic_hash": "b5e60b2eef9593002ea3e96ed4da538d"
+  },
+  "doom/linuxdoom-1.10/st_lib.c": {
+    "mtime": 1789651332.0289328,
+    "seen": 1794167003.36161,
+    "ast_hash": "4406afceaf7bcf054cde23cf94ea4957",
+    "semantic_hash": "4406afceaf7bcf054cde23cf94ea4957"
+  },
+  "doom/linuxdoom-1.10/st_lib.h": {
+    "mtime": 1789651332.03042,
+    "seen": 1794167003.3616114,
+    "ast_hash": "be667250e6056bec9c85b98dff31cec2",
+    "semantic_hash": "be667250e6056bec9c85b98dff31cec2"
+  },
+  "doom/linuxdoom-1.10/st_stuff.c": {
+    "mtime": 1789651332.03042,
+    "seen": 1794167003.3616126,
+    "ast_hash": "d71bc7bb918a520b5ad8c2c308d39b6b",
+    "semantic_hash": "d71bc7bb918a520b5ad8c2c308d39b6b"
+  },
+  "doom/linuxdoom-1.10/st_stuff.h": {
+    "mtime": 1789651332.0314324,
+    "seen": 1794167003.3616138,
+    "ast_hash": "01a9f701a1fd636f98ce5d38eed40c10",
+    "semantic_hash": "01a9f701a1fd636f98ce5d38eed40c10"
+  },
+  "doom/linuxdoom-1.10/tables.c": {
+    "mtime": 1789651332.0314324,
+    "seen": 1794167003.361615,
+    "ast_hash": "51d5c9bea15d12ad591b2fb4a88f6912",
+    "semantic_hash": "51d5c9bea15d12ad591b2fb4a88f6912"
+  },
+  "doom/linuxdoom-1.10/tables.h": {
+    "mtime": 1789651332.0324152,
+    "seen": 1794167003.361616,
+    "ast_hash": "6063257ac1958713f720288526df5de2",
+    "semantic_hash": "6063257ac1958713f720288526df5de2"
+  },
+  "doom/linuxdoom-1.10/v_video.c": {
+    "mtime": 1789651332.0334136,
+    "seen": 1794167003.3616168,
+    "ast_hash": "bab861c3bac69ebfc4f68c112eb5bb68",
+    "semantic_hash": "bab861c3bac69ebfc4f68c112eb5bb68"
+  },
+  "doom/linuxdoom-1.10/v_video.h": {
+    "mtime": 1789651332.0334136,
+    "seen": 1794167003.3616178,
+    "ast_hash": "25fdbaedd5a7e133b6b42240747bf8ae",
+    "semantic_hash": "25fdbaedd5a7e133b6b42240747bf8ae"
+  },
+  "doom/linuxdoom-1.10/w_wad.c": {
+    "mtime": 1793724022.9803424,
+    "seen": 1794167003.3616192,
+    "ast_hash": "70bc62af1e7e4e2f4a800ab6ee05d22b",
+    "semantic_hash": "70bc62af1e7e4e2f4a800ab6ee05d22b"
+  },
+  "doom/linuxdoom-1.10/w_wad.h": {
+    "mtime": 1789651332.0334136,
+    "seen": 1794167003.3616202,
+    "ast_hash": "e33c8b36a8a657e5d00103660f06ee3c",
+    "semantic_hash": "e33c8b36a8a657e5d00103660f06ee3c"
+  },
+  "doom/linuxdoom-1.10/wi_stuff.c": {
+    "mtime": 1789651332.0347354,
+    "seen": 1794167003.3616216,
+    "ast_hash": "0e11080d20d84609c8a271aa263ecd77",
+    "semantic_hash": "0e11080d20d84609c8a271aa263ecd77"
+  },
+  "doom/linuxdoom-1.10/wi_stuff.h": {
+    "mtime": 1789651332.0347354,
+    "seen": 1794167003.3616226,
+    "ast_hash": "c9bd5ba769b7a7ed5752990cf7035eae",
+    "semantic_hash": "c9bd5ba769b7a7ed5752990cf7035eae"
+  },
+  "doom/linuxdoom-1.10/z_zone.c": {
+    "mtime": 1789651332.035777,
+    "seen": 1794167003.3616238,
+    "ast_hash": "afd74ca5741260fd8a74470b929ce226",
+    "semantic_hash": "afd74ca5741260fd8a74470b929ce226"
+  },
+  "doom/linuxdoom-1.10/z_zone.h": {
+    "mtime": 1789651332.035777,
+    "seen": 1794167003.3616247,
+    "ast_hash": "f44ad09beeafb33cf742792ee8de2d74",
+    "semantic_hash": "f44ad09beeafb33cf742792ee8de2d74"
+  },
+  "main.js": {
+    "mtime": 1794165254.5708928,
+    "seen": 1794167003.361626,
+    "ast_hash": "c4ff9f47eec7b9ff00cd7b8d0879af2a",
+    "semantic_hash": "c4ff9f47eec7b9ff00cd7b8d0879af2a"
+  },
+  "INSTRUCCIONES.md": {
+    "mtime": 1794165572.0634053,
+    "seen": 1794167003.3616269,
+    "ast_hash": "c82bd9b550bddfb0640e2f924dd4b718",
+    "semantic_hash": "c82bd9b550bddfb0640e2f924dd4b718"
+  },
+  "README.md": {
+    "mtime": 1794165548.048873,
+    "seen": 1794167003.361628,
+    "ast_hash": "c8a8b5f114a03d5481a2927646888cdc",
+    "semantic_hash": "c8a8b5f114a03d5481a2927646888cdc"
+  },
+  "control.html": {
+    "mtime": 1794165381.7617407,
+    "seen": 1794167003.3616328,
+    "ast_hash": "6bead86cd1cae8f413dbd81a1bc1586f",
+    "semantic_hash": "6bead86cd1cae8f413dbd81a1bc1586f"
+  },
+  "doom/LICENSE.TXT": {
+    "mtime": 1793722641.343284,
+    "seen": 1794167003.3616338,
+    "ast_hash": "46aaf69a91703493b666f212a04f2d8d",
+    "semantic_hash": "46aaf69a91703493b666f212a04f2d8d"
+  },
+  "doom/README.TXT": {
+    "mtime": 1793722641.3452046,
+    "seen": 1794167003.361635,
+    "ast_hash": "e51b527e9e8e6b0edb3a3db3fe842997",
+    "semantic_hash": "e51b527e9e8e6b0edb3a3db3fe842997"
+  },
+  "index.html": {
+    "mtime": 1794165264.1414826,
+    "seen": 1794167003.3616362,
+    "ast_hash": "a6adb6accb69ce75dd9bde7a39de0407",
+    "semantic_hash": "a6adb6accb69ce75dd9bde7a39de0407"
+  }
+}

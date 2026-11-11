@@ -1,7 +1,7 @@
 # Proyecto: Doomy plays DOOM
 
 - Fecha inicio 05-11-2026 
-- Estado [**En Ideación**]
+- Estado [**Finalizado**]
 
 <br>
 
@@ -11,7 +11,7 @@
 
 ## 1. Contexto
 
-En el año 2014 en la plataforma Twitch, se realizó un directo todos quienes observaban la transmisión podían jugar, este evento se llamó "_Twitch Plays Pokemon_". Es decir que miles de personas controlaban la misma partida y al mismo personaje a la vez, esto fue posible ya que mediante la escritura de comandes en el chat de Twitch un _script_ lo interpretaba y realizaba las acciones en el videojuego.
+En el año 2014 en la plataforma Twitch, se realizó un directo todos quienes observaban la transmisión podían jugar, este evento se llamó "[_Twitch Plays Pokemon_](https://www.twitch.tv/twitchplayspokemon/videos)". Es decir que miles de personas controlaban la misma partida y al mismo personaje a la vez, esto fue posible ya que mediante la escritura de comandes en el chat de Twitch un _script_ lo interpretaba y realizaba las acciones en el videojuego.
 
 Esto fue tomado como punto de partida para que al momento de jugar DOOM con tus amigos, cada quien controle un elemento de la partida, teniendo que coordinarse para poder terminar el juego
 
@@ -80,8 +80,6 @@ Es importante en el desarrollo que los siguientes elementos funcionen o cumplan 
 - En dispositivos moviles, la web debe versé lo más "_limpia_", es decir que se deben reducir la cantidad de elementos en ella a los mínimos necesarias 
 
 ---
-
-##  Resultado Final y Conclusiones
 
 <br>
 
@@ -243,7 +241,12 @@ Es importante en el desarrollo que los siguientes elementos funcionen o cumplan 
 
 ---
 
+<br>
+
 ## Comentarios Claude
+
+<details>
+<summary><b>Click acá</b></summary>
 
 Elementos a mejorar en próximas versiones:
 
@@ -381,3 +384,13 @@ Elementos a considerar:
 8. **Insignias de 88x31.** Están hechas con texto y CSS, no son imágenes, y no enlazan a ningún sitio. Si se quieren imágenes reales, se pueden agregar como `.gif` o `.png` en una carpeta `img/`.
 9. **Columnas del PC.** Ahora miden 8,5em con letra de 11 px (unos 94 px por jugador, antes unos 102 px). Con 7 jugadores siguen restando ancho a DOOM (ver el punto 4 de v03).
 10. **Pruebas.** Se revisó con capturas de Edge en modo headless: el lobby del PC; la partida y la pausa simuladas; y en el celular, unirse, el lobby y la partida simulados en 390 px de ancho. No se probó con el broker conectado, en celulares reales ni en Safari/iOS.
+
+</details>
+
+<br>
+
+##  Resultado Final y Conclusiones
+
+Finalmente en esta web se puede experimentar como no solo el tacto trabaja en conjunto conjunto con otros sensores, no solo en el cuerpo humano, si no tambien en los dispositivos. En _Doomy plays DOOM_, se representa como ninguna sensación funciona sola, todas estas se complementan para lograr una interpretación de la realidad y en este caso la realidad es jugar DOOM. 
+
+Esta experiencia busca ser compleja sin caer en la frustración, es por ello que consta de calibración de los sensores y el uso de otros con menor complejidad

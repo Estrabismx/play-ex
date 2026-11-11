@@ -1,14 +1,19 @@
-# Graph Report - play-ex  (2026-11-08)
+# Graph Report - play-ex  (2026-11-11)
 
 ## Corpus Check
-- 139 files · ~159,947 words
+- 136 files · ~161,457 words
 - Verdict: corpus is large enough that graph structure adds value.
-- Unclassified: 18 file(s) not represented in the graph (top: (none) 9, .WAD 1, .data 1)
+- Unclassified: 19 file(s) not represented in the graph (top: (none) 10, .WAD 1, .data 1)
 
 ## Summary
-- 1475 nodes · 3999 edges · 76 communities (57 shown, 19 thin omitted)
-- Extraction: 74% EXTRACTED · 26% INFERRED · 0% AMBIGUOUS · INFERRED: 1042 edges (avg confidence: 0.85)
-- Token cost: 88,659 input · 0 output
+- 1475 nodes · 4000 edges · 76 communities (57 shown, 19 thin omitted)
+- Extraction: 74% EXTRACTED · 26% INFERRED · 0% AMBIGUOUS · INFERRED: 1043 edges (avg confidence: 0.85)
+- Token cost: 0 input · 0 output
+
+## Graph Freshness
+- Built from commit: `fad7a674`
+- Run `git rev-parse HEAD` and compare to check if the graph is stale.
+- Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - Screen Display & Finale
@@ -94,27 +99,27 @@
 7. `P_SetMobjState()` - 30 edges
 8. `V_DrawPatch()` - 29 edges
 9. `W_CacheLumpNum()` - 29 edges
-10. `D_DoomMain()` - 27 edges
+10. `P_SpawnMobj()` - 27 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `doomy_web.c engine functions (menu state, pause, autosave)` --conceptually_related_to--> `DOOM source code release (1997)`  [INFERRED]
-  INSTRUCCIONES.md → doom/README.TXT
 - `Estrabismx/DOOM browser repo (reference)` --conceptually_related_to--> `DOOM source code release (1997)`  [INFERRED]
   README.md → doom/README.TXT
+- `doomy_web.c engine functions (menu state, pause, autosave)` --conceptually_related_to--> `DOOM source code release (1997)`  [INFERRED]
+  INSTRUCCIONES.md → doom/README.TXT
 - `wipe_exitMelt()` --calls--> `Z_Free()`  [INFERRED]
   doom/linuxdoom-1.10/f_wipe.c → doom/linuxdoom-1.10/z_zone.c
 - `G_InitNew()` --calls--> `M_ClearRandom()`  [INFERRED]
   doom/linuxdoom-1.10/g_game.c → doom/linuxdoom-1.10/m_random.c
-- `PacketGet()` --calls--> `I_Error()`  [INFERRED]
-  doom/linuxdoom-1.10/i_net.c → doom/linuxdoom-1.10/i_system.c
+- `I_StartSound()` --calls--> `W_LumpLength()`  [INFERRED]
+  doom/linuxdoom-1.10/i_sound_web.c → doom/linuxdoom-1.10/w_wad.c
 
 ## Import Cycles
 - None detected.
 
 ## Hyperedges (group relationships)
-- **MQTT room protocol between PC and phones** — instrucciones_topic_estado, instrucciones_topic_host, instrucciones_topic_input, instrucciones_topic_jugador, index_page, control_page [INFERRED 0.85]
-- **Phone input sensors** — instrucciones_sensor_giroscopio, instrucciones_sensor_acelerometro, instrucciones_sensor_tactil, instrucciones_sensor_microfono [EXTRACTED 1.00]
 - **Seven assignable DOOM controls** — instrucciones_control_moverse, instrucciones_control_lateral, instrucciones_control_disparar, instrucciones_control_usar, instrucciones_control_correr, instrucciones_control_cambiar_arma, instrucciones_control_mapa [EXTRACTED 1.00]
+- **Phone input sensors** — instrucciones_sensor_giroscopio, instrucciones_sensor_acelerometro, instrucciones_sensor_tactil, instrucciones_sensor_microfono [EXTRACTED 1.00]
+- **MQTT room protocol between PC and phones** — instrucciones_topic_estado, instrucciones_topic_host, instrucciones_topic_input, instrucciones_topic_jugador, index_page, control_page [INFERRED 0.85]
 
 ## Communities (76 total, 19 thin omitted)
 
@@ -347,7 +352,7 @@ Cohesion: 1.00
 Nodes (3): syncfs(), doCallback(), done()
 
 ## Knowledge Gaps
-- **20 isolated node(s):** `Doomy plays DOOM (Instrucciones)`, `Topic host (phones to PC: unir, elegir, soltar, listo, ping, salir LWT)`, `Topic jugador/<id> (rechazo, bienvenida, reunir)`, `GitHub Pages hosting (https required for sensors)`, `Control Moverse lateralmente (turns, Left/Right)` (+15 more)
+- **20 isolated node(s):** `Sensor Acelerometro`, `Sensor Giroscopio`, `Sensor Tactil`, `vista-unirse (join room form)`, `Free Software Foundation` (+15 more)
   These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 372 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **19 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -355,15 +360,15 @@ Nodes (3): syncfs(), doCallback(), done()
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `I_Error()` connect `Network Packet Layer` to `Screen Display & Finale`, `Sector Specials (Doors, Ceilings)`, `Monster AI & Map Objects`, `Moving Sector Thinkers`, `Sound Lookup & Level Loading`, `Spawning & Randomness`, `Status Bar Widgets`, `Native Sound Driver`, `Input Responders & Cheats`, `Map Traversal & Use`, `Net & Player State Headers`, `Engine Startup & Args`, `Native Video Driver`, `Save Files & Screenshots`, `BSP Rendering`, `Level & Game Lifecycle`, `Automap Scaling`, `Sprite & Masked Rendering`, `Main Loop & Tic Commands`, `Demo Recording & Quit`, `Damage & Level Exit`, `Texture Columns & Planes`, `Sound Channels`, `Zone Memory Allocator`, `Line of Sight`, `X11 Window Setup`, `Music & Level Transitions`, `Bounding Boxes`?**
-  _High betweenness centrality (0.034) - this node is a cross-community bridge._
+  _High betweenness centrality (0.046) - this node is a cross-community bridge._
 - **Are the 91 inferred relationships involving `I_Error()` (e.g. with `D_DoomMain()` and `IdentifyVersion()`) actually correct?**
   _`I_Error()` has 91 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `Doomy plays DOOM (Instrucciones)`, `Topic host (phones to PC: unir, elegir, soltar, listo, ping, salir LWT)`, `Topic jugador/<id> (rechazo, bienvenida, reunir)` to the rest of the system?**
+- **What connects `Sensor Acelerometro`, `Sensor Giroscopio`, `Sensor Tactil` to the rest of the system?**
   _20 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Emscripten Runtime (doom.js)` be split into smaller, more focused modules?**
   _Cohesion score 0.012195121951219513 - nodes in this community are weakly interconnected._
 - **Why does `S_StartSound()` connect `Monster AI & Map Objects` to `Teleporters`, `Screen Display & Finale`, `Sector Specials (Doors, Ceilings)`, `Menu, Save & WAD`, `HUD Text Library`, `Player Weapon Actions`, `Finale & HUD Ticker`, `Moving Sector Thinkers`, `Demo Recording & Quit`, `Spawning & Randomness`, `Enemy Hitscan Attacks`, `Damage & Level Exit`, `Sound Channels`, `Input Responders & Cheats`, `Map Traversal & Use`, `Super Shotgun Actions`?**
-  _High betweenness centrality (0.029) - this node is a cross-community bridge._
+  _High betweenness centrality (0.023) - this node is a cross-community bridge._
 - **Are the 75 inferred relationships involving `S_StartSound()` (e.g. with `F_BunnyScroll()` and `F_CastResponder()`) actually correct?**
   _`S_StartSound()` has 75 INFERRED edges - model-reasoned connections that need verification._
 - **Should `Screen Display & Finale` be split into smaller, more focused modules?**

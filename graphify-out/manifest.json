@@ -792,28 +792,28 @@
     "semantic_hash": "f44ad09beeafb33cf742792ee8de2d74"
   },
   "main.js": {
-    "mtime": 1794165254.5708928,
-    "seen": 1794167003.361626,
-    "ast_hash": "c4ff9f47eec7b9ff00cd7b8d0879af2a",
-    "semantic_hash": "c4ff9f47eec7b9ff00cd7b8d0879af2a"
+    "mtime": 1794398885.6790497,
+    "seen": 1794399259.6800907,
+    "ast_hash": "15ef78a3b26dbaadda0c82a125b11ad4",
+    "semantic_hash": ""
   },
   "INSTRUCCIONES.md": {
-    "mtime": 1794165572.0634053,
-    "seen": 1794167003.3616269,
-    "ast_hash": "c82bd9b550bddfb0640e2f924dd4b718",
-    "semantic_hash": "c82bd9b550bddfb0640e2f924dd4b718"
+    "mtime": 1794399106.8206968,
+    "seen": 1794399259.6800926,
+    "ast_hash": "bc8b03f573de0df77254746402b4f7ff",
+    "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1794165548.048873,
-    "seen": 1794167003.361628,
-    "ast_hash": "c8a8b5f114a03d5481a2927646888cdc",
-    "semantic_hash": "c8a8b5f114a03d5481a2927646888cdc"
+    "mtime": 1794399106.818202,
+    "seen": 1794399259.6800942,
+    "ast_hash": "08688ee81d6e7192fef25959a7ec9ec9",
+    "semantic_hash": ""
   },
   "control.html": {
-    "mtime": 1794165381.7617407,
-    "seen": 1794167003.3616328,
-    "ast_hash": "6bead86cd1cae8f413dbd81a1bc1586f",
-    "semantic_hash": "6bead86cd1cae8f413dbd81a1bc1586f"
+    "mtime": 1794398913.7586946,
+    "seen": 1794399259.680096,
+    "ast_hash": "3b3c5f4b4cec61c935c33a565606ca5b",
+    "semantic_hash": ""
   },
   "doom/LICENSE.TXT": {
     "mtime": 1793722641.343284,
@@ -828,9 +828,15 @@
     "semantic_hash": "e51b527e9e8e6b0edb3a3db3fe842997"
   },
   "index.html": {
-    "mtime": 1794165264.1414826,
-    "seen": 1794167003.3616362,
-    "ast_hash": "a6adb6accb69ce75dd9bde7a39de0407",
-    "semantic_hash": "a6adb6accb69ce75dd9bde7a39de0407"
+    "mtime": 1794398902.0702674,
+    "seen": 1794399259.680103,
+    "ast_hash": "0b97479cabaff0945438ccb6226110df",
+    "semantic_hash": ""
+  },
+  "design_system_2000s.json": {
+    "mtime": 1794398006.4778185,
+    "seen": 1794399259.6798503,
+    "ast_hash": "2d8b54f80b4f8eec75f5df6862a2860b",
+    "semantic_hash": ""
   }
 }
