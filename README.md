@@ -139,7 +139,7 @@ Es importante en el desarrollo que los siguientes elementos funcionen o cumplan 
 
 - **Idioma de la interfaz:** Español
 
-- **Tono y estilo visual:** Utilizar html sin css para lo que no sea nativo de `doom.WAV`
+- **Tono y estilo visual:** Estética web de principios de los 2000 (Y2K) definida en `design_system_2000s.json` y aplicada en `style.css` (paleta oscura, barras naranja/rojo, Roboto Mono, Space Mono y VT323)
 
 <br>
 
@@ -346,3 +346,38 @@ Elementos a mejorar:
 4. **Columnas del PC con 7 jugadores.** Las 7 columnas ocupan cerca de la mitad del ancho de un monitor de 1600 px, así que DOOM se ve más pequeño. Se podría hacerlas más angostas o mostrar solo el control activo.
 5. **Pantalla completa.** Se quitó el botón; para jugar a pantalla completa hay que usar la del navegador (F11), con lo que también se ven las columnas.
 6. **Disparar al sumar un dedo.** En DOOM, mantener presionado Ctrl ya dispara en forma continua. Volver a presionar con cada dedo nuevo no dispara más rápido que la cadencia del arma; solo evita esperas al empezar.
+
+### v04
+
+Cambios aplicados respecto de v03:
+
+- **`style.css` reescrito** según `design_system_2000s.json`. Antes de escribir el código se definieron estos puntos:
+  - Se aplica al PC y al celular.
+  - Paleta oscura, con barras de módulo en degradado naranja → rojo.
+  - Cambios menores en el HTML, sin barra lateral.
+  - El celular usa texto más grande.
+  - Fuentes desde Google Fonts, con VT323 para los títulos.
+  - Durante la partida el PC sigue a pantalla completa, con marco Y2K.
+- **PC (lobby):** contenedor centrado de 960 px sobre una trama de píxeles. Arriba va una cabecera con el logo en VT323 y abajo un pie de página con 4 insignias de 88x31 px y la nota legal. Las secciones Sala, Jugadores y Controles son módulos con bordes biselados y barra de título. Se agregaron tablas con encabezado metálico y filas alternadas, botones metálicos y botones principales naranjos (Iniciar, Continuar, Unirse, Estoy listo).
+- **PC (partida):** sin ancho fijo. DOOM tiene un marco biselado, las columnas de jugadores usan barras naranjas y la acción activa se ve hundida en naranja. La pausa general es un módulo sobre el juego.
+- **Celular:** misma estética, con texto de 15 px, inputs de 16 px (iOS no hace zoom) y botones de al menos 44 px. Las pestañas tienen las esquinas superiores redondeadas. En la partida, la zona táctil lleva una cuadrícula, el joystick tiene una perilla naranja y el arma actual se muestra como una pantalla LCD.
+- **Decoraciones:** viñetas en forma de cruz de píxeles, insignias de 88x31 px, inputs y selects grises con borde hundido (estilo Windows 2000) y la etiqueta **NEW!**. Esta etiqueta parpadea durante 20 s junto al jugador que se acaba de unir (`TIEMPO_NUEVO` en `main.js`).
+- **HTML:** se agregaron el `<link>` a las fuentes, las clases `modulo`, `modulo-titulo`, `modulo-cuerpo` y `principal`, la cabecera y el pie. No se cambió ningún `id` que use el JS.
+
+Elementos a considerar:
+
+1. **Fuentes externas.** Roboto Mono, Space Mono y VT323 se cargan desde Google Fonts. Sin internet (o si se bloquea Google), el texto usa la fuente monospace del sistema y el diseño se mantiene. VT323 no tiene algunos símbolos, como las flechas ← →; en esos casos el navegador usa otra fuente para ese carácter.
+2. **Altura del lobby en celulares pequeños.** Los botones de 44 px hacen más alta la lista de 7 controles. En pantallas de unos 550 px útiles (iPhone SE con la barra del navegador), la última fila podría quedar cortada, porque el diseño no tiene scroll. Hay que probarlo en un celular real. Si ocurre, se puede bajar a 36–40 px solo en `.fila button`.
+3. **Colores de enlaces distintos al JSON.** El JSON pide #0000FF para los enlaces y #800080 para los visitados, pero sobre fondo oscuro casi no se leen. Se usaron #6aa8ff y #c58cff, porque el JSON permite "colores de alto contraste con el fondo".
+4. **Tamaño del logo.** El JSON fija los títulos principales en 18–24 px. El logo se dejó en 44 px (48 px en el celular) porque VT323 se ve pequeña y la cabecera del JSON pide un "logo complejo". Los títulos de módulo sí están en 14–16 px.
+5. **Elementos del JSON que no se aplicaron:**
+   - barra lateral (decisión tomada);
+   - pestañas de navegación y buscador en la cabecera: la web tiene una sola página, así que no hay a dónde navegar;
+   - miniaturas (thumbnails) y texturas grunge.
+
+   Si más adelante se agregan secciones (por ejemplo, Instrucciones o Créditos), se pueden incluir las pestañas de la cabecera.
+6. **Contraste de las barras naranjas.** El texto blanco sobre la parte clara del degradado tiene un contraste cercano a 3:1; la sombra negra del texto lo compensa. Conviene revisarlo en el proyector o la TV donde se jugará.
+7. **Etiqueta NEW!** Solo aparece en el PC (lista de jugadores del lobby y de la pausa). Los jugadores recuperados al "volver al lobby" no la muestran. Si el sistema tiene activado "reducir movimiento", no parpadea.
+8. **Insignias de 88x31.** Están hechas con texto y CSS, no son imágenes, y no enlazan a ningún sitio. Si se quieren imágenes reales, se pueden agregar como `.gif` o `.png` en una carpeta `img/`.
+9. **Columnas del PC.** Ahora miden 8,5em con letra de 11 px (unos 94 px por jugador, antes unos 102 px). Con 7 jugadores siguen restando ancho a DOOM (ver el punto 4 de v03).
+10. **Pruebas.** Se revisó con capturas de Edge en modo headless: el lobby del PC; la partida y la pausa simuladas; y en el celular, unirse, el lobby y la partida simulados en 390 px de ancho. No se probó con el broker conectado, en celulares reales ni en Safari/iOS.

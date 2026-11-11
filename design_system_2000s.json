@@ -1,0 +1,66 @@
+{
+    "estilo_general": {
+        "nombre": "Y2K / Early 2000s Web Aesthetic",
+        "descripcion": "Estética inspirada en las páginas web y blogs de principios de los 2000 (basado en referencias como Nintendo, GameSpot y Thrasher de la época), caracterizada por diseños modulares densos, anchos fijos y elementos gráficos con volumen (biselados, degradados metálicos, y marcos fuertemente delimitados)."
+    },
+    "diagramacion_y_layout": {
+        "tipo_layout": "Estructura de caja rígida, emulando maquetación por tablas (Table-based layout).",
+        "dimensiones": {
+            "ancho_maximo_contenedor": "760px a 960px (optimizado para monitores de 800x600 o 1024x768).",
+            "alineacion_contenedor": "Centrado en la pantalla (a veces alineado a la izquierda con fondo repetitivo).",
+            "ancho_sidebar_izquierdo": "150px - 200px."
+        },
+        "estructura_clasica": [
+            "Cabecera (Header): Logo complejo a la izquierda, sistema de navegación por pestañas (tabs) superpuestas con curvas, y barra de búsqueda integrada.",
+            "Barra lateral (Sidebar): Menú de navegación denso y vertical. A menudo incluye subsecciones, formularios de login rápidos y encuestas.",
+            "Contenido Principal (Main): Dividido en múltiples cajas o módulos independientes con bordes gruesos o biselados. Alta densidad de información y miniaturas (thumbnails).",
+            "Pie de página (Footer): Texto centrado muy pequeño, contenedor oscuro, insignias de certificación (ej. ESRB, Privacy Certified) y notas de copyright."
+        ]
+    },
+    "tipografia": {
+        "fuente_principal": {
+            "nombre": "Roboto Mono",
+            "tipo": "Monospace",
+            "licencia": "SIL Open Font License (OFL)",
+            "uso": "Cuerpo de texto general, datos tabulares, fechas y listados densos en las barras laterales."
+        },
+        "fuentes_alternativas_y_compatibles": [
+            {
+                "nombre": "Space Mono",
+                "tipo": "Monospace",
+                "licencia": "SIL Open Font License (OFL)",
+                "uso": "Titulares secundarios y etiquetas de botones."
+            },
+            {
+                "nombre": "VT323 / Pixelify Sans",
+                "tipo": "Display / Pixel",
+                "licencia": "SIL Open Font License (OFL)",
+                "uso": "Títulos principales, banners publicitarios y elementos que requieran una estética retro digital/gaming."
+            }
+        ],
+        "tamanos_fuente": {
+            "cuerpo_texto": "10px - 12px (típicamente pequeño para maximizar la cantidad de información visible sin hacer scroll).",
+            "titulos_modulos": "14px - 16px (frecuentemente en negrita, a veces en mayúsculas y con sombra/drop-shadow).",
+            "titulos_principales": "18px - 24px",
+            "texto_legal_footer": "9px - 10px"
+        }
+    },
+    "elementos_visuales_y_ui": {
+        "bordes": "Uso intensivo de bordes sólidos, estilo 'outset' o 'inset' para simular profundidad 3D en botones y contenedores.",
+        "fondos": "Degradados lineales (arriba hacia abajo), uso de tramas (patterns) de píxeles o texturas grunge en el cuerpo de la página.",
+        "cajas_de_contenido": "Las cabeceras de cada módulo de noticias (ej. 'Official News', 'Latest News') utilizan barras con degradados (metálicos, azules o naranjas) y texto en alto contraste.",
+        "colores_interaccion": {
+            "enlaces_normales": "#0000FF (Azul clásico) o colores de alto contraste con el fondo.",
+            "enlaces_visitados": "#800080 (Púrpura).",
+            "enlaces_hover": "Cambio drástico de color (ej. rojo o naranja) y aparición de subrayado.",
+            "texto_general": "Alta legibilidad, texto blanco sobre fondos oscuros (GameSpot) o texto negro sobre grises/celestes (Nintendo)."
+        },
+        "botones_y_pestañas": "Pestañas con esquinas redondeadas en la parte superior, gradientes intensos para simular plástico o metal, y sombras paralelas en el texto."
+    },
+    "decoraciones_caracteristicas": [
+        "Insignias y botones de 88x31px ('Microbarras' o web buttons).",
+        "Etiquetas gráficas de 'NEW!' o 'UPDATE!' superpuestas en esquinas de imágenes.",
+        "Listados con viñetas personalizadas (pequeños íconos de píxeles o cruces).",
+        "Formularios con estilo nativo del sistema operativo antiguo (inputs y selects grises)."
+    ]
+}

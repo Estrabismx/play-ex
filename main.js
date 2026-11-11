@@ -17,6 +17,7 @@
   var todos = function (selector) { return Array.prototype.slice.call(document.querySelectorAll(selector)); };
 
   var TIEMPO_SIN_SENAL = 8000;   // ms sin ping para dar por desconectado a un celular
+  var TIEMPO_NUEVO = 20000;      // ms que se muestra la etiqueta "NEW!" junto a un jugador recién unido
 
   // Bits de Module._doomy_estado() (ver doomy_web.c).
   var MENU_ABIERTO = 1, ESCRIBIENDO = 2, EN_NIVEL = 8;
@@ -320,7 +321,8 @@
         publicar(T.jugador(p.id), { tipo: 'rechazo', motivo: 'La sala está llena (máximo ' + D.MAX_JUGADORES + ' jugadores).' });
         return;
       }
-      j = estado.jugadores[p.id] = { nombre: nombre, listo: false, visto: Date.now() };
+      j = estado.jugadores[p.id] = { nombre: nombre, listo: false, visto: Date.now(), nuevoHasta: Date.now() + TIEMPO_NUEVO };
+      setTimeout(dibujar, TIEMPO_NUEVO + 50);   // quita la etiqueta "NEW!"
       registrar(nombre + ' se unió' + (estado.fase === 'juego' ? ' (podrá elegir controles en la pausa general)' : ''));
     }
     j.nombre = nombre;
@@ -480,8 +482,14 @@
       ids.forEach(function (id) {
         var j = estado.jugadores[id];
         var n = controlesDe(id).length;
-        lista.appendChild(elemento('li', j.nombre + ' · ' + n + (n === 1 ? ' control' : ' controles') +
-          (estado.fase !== 'juego' ? (j.listo ? ' · listo' : ' · eligiendo') : '')));
+        var li = elemento('li', j.nombre + ' · ' + n + (n === 1 ? ' control' : ' controles') +
+          (estado.fase !== 'juego' ? (j.listo ? ' · listo' : ' · eligiendo') : ''));
+        if (j.nuevoHasta && Date.now() < j.nuevoHasta) {
+          var nuevo = elemento('span', 'NEW!');
+          nuevo.className = 'nuevo';
+          li.appendChild(nuevo);
+        }
+        lista.appendChild(li);
       });
     });
 

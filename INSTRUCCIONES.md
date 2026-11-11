@@ -209,7 +209,7 @@ deja esa combinación. Los demás gestos táctiles están pensados para usarse a
 | `control.html` / `control.js` | Control del celular: lobby, sensores, gestos táctiles y ajustes |
 | `comun.js` | Controles, sensores, gestos, valores por defecto y temas MQTT |
 | `config.js` | Datos de conexión al broker |
-| `style.css` | Estilos básicos (provisorios) |
+| `style.css` | Estilos Y2K según `design_system_2000s.json` (PC y celular) |
 | `doom/` | Motor de DOOM compilado (`doom.js`, `doom.wasm`, `doom.data`) y su código fuente (`build-web.sh`, `linuxdoom-1.10/`, `doom.WAD`) |
 | `doom/linuxdoom-1.10/doomy_web.c` | Funciones agregadas al motor: estado del menú, pausa y autoguardado |
 

@@ -1,31 +1,441 @@
-/* Estilos básicos (provisorios): se reemplazarán más adelante. */
+/* =====================================================================
+   Doomy plays DOOM · Estética Y2K / web de principios de los 2000
+   Basado en design_system_2000s.json:
+   - Paleta oscura (texto claro sobre fondo oscuro) con barras de módulo
+     en degradado naranja → rojo.
+   - Tipografías: Roboto Mono (texto), Space Mono (subtítulos y botones),
+     VT323 (logo y títulos principales).
+   - Bordes biselados (outset/inset), degradados de arriba hacia abajo y
+     trama de píxeles en el fondo.
+   - PC: lobby en un contenedor fijo de 960 px; la partida usa toda la
+     pantalla. Celular: pantalla completa sin scroll, texto y botones
+     más grandes para el uso táctil.
+   ===================================================================== */
+
+/* ---------- Tokens ---------- */
+
+:root {
+  /* Fondos */
+  --fondo-pagina: #0b0b0b;
+  --trama-a: #151515;
+  --trama-b: #0e0e0e;
+  --fondo-contenedor: #1a1a1a;
+  --fondo-modulo: #222;
+  --fondo-fila: #262626;
+  --fondo-fila-alt: #1e1e1e;
+
+  /* Bordes biselados: luz arriba-izquierda, sombra abajo-derecha */
+  --bisel-luz: #5c5c5c;
+  --bisel-sombra: #050505;
+  --borde-fino: #000;
+
+  /* Texto */
+  --texto: #e8e8e8;
+  --texto-suave: #a8a8a8;
+  --texto-tenue: #777;
+
+  /* Acentos (barras de módulo y elementos activos) */
+  --naranja: #ff8a00;
+  --naranja-claro: #ffb24d;
+  --rojo: #c41200;
+  --rojo-oscuro: #6e0a00;
+  --amarillo: #ffcc33;
+  --barra-arriba: #e8740c;
+  --barra-abajo: #8a1200;
+  --barra-brillo: #ffb15c;
+
+  /* Enlaces (alto contraste sobre fondo oscuro) */
+  --enlace: #6aa8ff;
+  --enlace-visitado: #c58cff;
+  --enlace-hover: var(--naranja);
+
+  /* Estados */
+  --error: #ff5a47;
+  --exito: #7ee05a;
+
+  /* Botones metálicos */
+  --metal-arriba: #f2f2f2;
+  --metal-medio: #b9b9b9;
+  --metal-abajo: #8a8a8a;
+  --metal-texto: #111;
+
+  /* Formularios estilo sistema operativo antiguo */
+  --form-fondo: #d4d0c8;
+  --form-texto: #000;
+  --form-luz: #fff;
+  --form-sombra: #404040;
+
+  /* Tipografías */
+  --fuente-texto: "Roboto Mono", ui-monospace, "Courier New", monospace;
+  --fuente-sub: "Space Mono", ui-monospace, "Courier New", monospace;
+  --fuente-pixel: "VT323", ui-monospace, "Courier New", monospace;
+
+  /* Tamaños (PC) */
+  --tam-texto: 12px;
+  --tam-modulo: 14px;
+  --tam-titulo: 24px;
+  --tam-logo: 44px;
+  --tam-legal: 10px;
+
+  /* Medidas */
+  --ancho-sitio: 960px;
+}
+
+/* ---------- Base ---------- */
+
+html {
+  background-color: var(--fondo-pagina);
+  /* Trama de píxeles 2x2 */
+  background-image: repeating-conic-gradient(var(--trama-a) 0 25%, var(--trama-b) 0 50%);
+  background-size: 4px 4px;
+}
 
 body {
   margin: 0 auto;
-  padding: 16px;
-  max-width: 1100px;
-  font-family: system-ui, sans-serif;
-  background: #fff;
-  color: #111;
+  padding: 0;
+  font-family: var(--fuente-texto);
+  font-size: var(--tam-texto);
+  line-height: 1.45;
+  color: var(--texto);
+  background: var(--fondo-contenedor);
 }
 
-.aviso { color: #555; font-size: 0.9em; }
-.error { color: #b00; }
+h1, h2, h3 { margin: 0; }
 
-table { border-collapse: collapse; }
-th, td { border: 1px solid #ccc; padding: 4px 8px; text-align: left; }
+h2 {
+  font-family: var(--fuente-sub);
+  font-size: var(--tam-modulo);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-shadow: 1px 1px 0 #000;
+}
 
-button { padding: 6px 12px; }
+p { margin: 8px 0; }
 
-/* ---------- PC ---------- */
+strong, b { color: #fff; }
+
+a { color: var(--enlace); text-decoration: none; word-break: break-all; }
+a:visited { color: var(--enlace-visitado); }
+a:hover, a:focus-visible { color: var(--enlace-hover); text-decoration: underline; }
+
+:focus-visible { outline: 2px dashed var(--amarillo); outline-offset: 2px; }
+
+.aviso { color: var(--texto-suave); font-size: 0.92em; }
+.error { color: var(--error); }
+
+/* ---------- Logo (título principal) ---------- */
+
+.logo {
+  font-family: var(--fuente-pixel);
+  font-weight: 400;
+  font-size: var(--tam-logo);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--naranja);
+  text-shadow:
+    2px 2px 0 var(--rojo-oscuro),
+    3px 3px 0 #000;
+}
+
+/* ---------- Módulos (cajas con barra de título) ---------- */
+
+.modulo {
+  margin: 0 0 12px;
+  background: var(--fondo-modulo);
+  border: 2px solid;
+  border-color: var(--bisel-luz) var(--bisel-sombra) var(--bisel-sombra) var(--bisel-luz);
+  box-shadow: 2px 2px 0 #000;
+}
+
+.modulo-titulo {
+  padding: 4px 8px;
+  color: #fff;
+  background: linear-gradient(to bottom, var(--barra-arriba), var(--barra-abajo));
+  border-top: 1px solid var(--barra-brillo);
+  border-bottom: 2px solid #000;
+}
+
+.modulo-cuerpo { padding: 8px 10px; }
+.modulo-cuerpo > :first-child { margin-top: 0; }
+.modulo-cuerpo > :last-child { margin-bottom: 0; }
+
+/* ---------- Botones (plástico/metal con bisel) ---------- */
+
+button {
+  font-family: var(--fuente-sub);
+  font-size: 1em;
+  font-weight: 700;
+  padding: 4px 12px;
+  color: var(--metal-texto);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+  background: linear-gradient(to bottom, var(--metal-arriba), var(--metal-medio) 55%, var(--metal-abajo));
+  border: 2px solid;
+  border-color: #fff #3a3a3a #3a3a3a #fff;
+  border-radius: 0;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) { filter: brightness(1.08); }
+
+button:active:not(:disabled) {
+  border-color: #3a3a3a #fff #fff #3a3a3a;
+  background: linear-gradient(to top, var(--metal-arriba), var(--metal-medio) 55%, var(--metal-abajo));
+}
+
+button:disabled {
+  cursor: default;
+  color: #6a6a6a;
+  text-shadow: 1px 1px 0 #ddd;
+  background: #a9a9a9;
+  border-color: #c8c8c8 #6a6a6a #6a6a6a #c8c8c8;
+}
+
+/* Botón principal: degradado naranja → rojo */
+button.principal:not(:disabled),
+button.boton-listo {
+  color: #fff;
+  text-shadow: 1px 1px 0 #000;
+  background: linear-gradient(to bottom, var(--naranja-claro), var(--naranja) 45%, var(--rojo));
+  border-color: #ffd29a var(--rojo-oscuro) var(--rojo-oscuro) #ffd29a;
+}
+
+button.principal:active:not(:disabled),
+button.boton-listo:active {
+  border-color: var(--rojo-oscuro) #ffd29a #ffd29a var(--rojo-oscuro);
+  background: linear-gradient(to top, var(--naranja-claro), var(--naranja) 45%, var(--rojo));
+}
+
+/* ---------- Formularios estilo sistema operativo antiguo ---------- */
+
+input, select {
+  font-family: var(--fuente-texto);
+  font-size: 1em;
+  padding: 3px 4px;
+  color: var(--form-texto);
+  background: var(--form-fondo);
+  border: 2px solid;
+  border-color: var(--form-sombra) var(--form-luz) var(--form-luz) var(--form-sombra);
+  border-radius: 0;
+}
+
+input:focus, select:focus { background: #fff; }
+
+input[type=checkbox] { accent-color: var(--naranja); }
+
+#form-unirse label { font-family: var(--fuente-sub); font-weight: 700; }
+
+progress { accent-color: var(--naranja); width: 60%; }
+
+/* ---------- Tablas ---------- */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 2px solid;
+  border-color: var(--bisel-sombra) var(--bisel-luz) var(--bisel-luz) var(--bisel-sombra);
+}
+
+th, td {
+  padding: 3px 8px;
+  text-align: left;
+  border: 1px solid var(--borde-fino);
+}
+
+th {
+  font-family: var(--fuente-sub);
+  font-size: 0.92em;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 1px 1px 0 #000;
+  background: linear-gradient(to bottom, #5a5a5a, #2c2c2c);
+}
+
+tbody tr:nth-child(odd) { background: var(--fondo-fila); }
+tbody tr:nth-child(even) { background: var(--fondo-fila-alt); }
+
+/* ---------- Listas con viñetas de píxel (cruz) ---------- */
+
+.lista-jugadores {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.lista-jugadores li {
+  position: relative;
+  padding: 3px 0 3px 18px;
+  border-bottom: 1px dotted #444;
+}
+
+.lista-jugadores li::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: calc(3px + 0.725em - 1px);
+  width: 2px;
+  height: 2px;
+  background: var(--naranja);
+  box-shadow:
+    2px 0 0 var(--naranja), -2px 0 0 var(--naranja),
+    0 2px 0 var(--naranja), 0 -2px 0 var(--naranja);
+}
+
+/* Etiqueta "NEW!" junto a un jugador recién unido */
+.nuevo {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 0 4px;
+  font-family: var(--fuente-pixel);
+  font-size: 15px;
+  line-height: 1.1;
+  color: var(--amarillo);
+  background: var(--rojo);
+  border: 1px solid #000;
+  box-shadow: 1px 1px 0 #000;
+  transform: rotate(-4deg);
+  animation: parpadeo 1s steps(1) infinite;
+}
+
+@keyframes parpadeo { 50% { color: #fff; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .nuevo { animation: none; }
+}
+
+/* =====================================================================
+   PC (index.html)
+   ===================================================================== */
+
+/* Contenedor fijo centrado, como una web de 1024x768 */
+body.pc {
+  max-width: var(--ancho-sitio);
+  min-height: 100vh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  border-left: 2px solid #000;
+  border-right: 2px solid #000;
+  box-shadow: 0 0 0 1px #333;
+}
+
+/* Cabecera */
+.cabecera-sitio {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 12px 10px;
+  background: linear-gradient(to bottom, #2e2e2e, #121212);
+  border-bottom: 4px solid;
+  border-image: linear-gradient(to right, var(--naranja), var(--rojo)) 1;
+}
+
+.lema {
+  margin: 0;
+  font-family: var(--fuente-sub);
+  font-size: 11px;
+  color: var(--texto-suave);
+  text-align: right;
+}
+
+/* Barra de estado (conexión y avisos del motor) */
+body.pc > #conexion,
+body.pc > #aviso-motor {
+  margin: 0;
+  padding: 3px 12px;
+  font-size: 11px;
+  background: #0f0f0f;
+  border-bottom: 1px solid #333;
+}
+
+body.pc > #aviso-motor[hidden] { display: none; }
+
+#lobby { flex: 1 0 auto; padding: 12px; }
 
 .sala {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 32px;
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+
+#codigo-sala { color: var(--amarillo); }
+
+/* El QR necesita fondo blanco para leerse */
+#qr {
+  display: inline-block;
+  padding: 8px;
+  background: #fff;
+  border: 2px solid;
+  border-color: var(--bisel-sombra) var(--bisel-luz) var(--bisel-luz) var(--bisel-sombra);
 }
 
 #qr img, #qr canvas { display: block; }
+
+#lobby .motivo { margin-left: 6px; }
+
+/* Pie de página */
+.pie-sitio {
+  padding: 10px 12px 12px;
+  text-align: center;
+  font-size: var(--tam-legal);
+  color: var(--texto-tenue);
+  background: #0a0a0a;
+  border-top: 2px solid var(--rojo);
+}
+
+.pie-sitio p { margin: 6px 0 0; }
+
+/* Insignias de 88x31 px */
+.insignias {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+}
+
+.insignia {
+  display: flex;
+  align-items: center;
+  width: 88px;
+  height: 31px;
+  box-sizing: border-box;
+  overflow: hidden;
+  font-family: var(--fuente-sub);
+  font-size: 9px;
+  line-height: 1;
+  text-transform: uppercase;
+  color: #000;
+  background: linear-gradient(to bottom, #f4f4f4, #a8a8a8);
+  border: 1px solid;
+  border-color: #fff #222 #222 #fff;
+  outline: 1px solid #000;
+}
+
+.insignia b {
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  margin-right: 4px;
+  padding: 0 4px;
+  font-family: var(--fuente-pixel);
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--amarillo);
+  background: linear-gradient(to bottom, var(--barra-arriba), var(--barra-abajo));
+  border-right: 1px solid #000;
+}
+
+/* PC en pantallas angostas: los módulos se apilan */
+@media (max-width: 640px) {
+  .sala { grid-template-columns: minmax(0, 1fr); }
+  .cabecera-sitio { flex-direction: column; align-items: flex-start; }
+  .lema { text-align: left; }
+  .logo { font-size: 36px; }
+}
+
+/* ---------- PC durante la partida: pantalla completa ---------- */
 
 /* Durante la partida el PC solo muestra el juego (centrado) y, a la
    derecha, una columna por jugador. */
@@ -33,15 +443,20 @@ body.pc.jugando {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  min-height: 0;
   max-width: none;
   margin: 0;
   padding: 0;
   overflow: hidden;
+  border: 0;
+  box-shadow: none;
+  background: #050505;
 }
 
-body.pc.jugando > h1 { display: none; }
+body.pc.jugando > .cabecera-sitio,
+body.pc.jugando > .pie-sitio { display: none; }
 body.pc.jugando > #conexion:not(.error) { display: none; }
-body.pc.jugando > p { flex: none; margin: 4px 8px; }
+body.pc.jugando > p { flex: none; }
 
 #juego:not([hidden]) {
   display: flex;
@@ -55,15 +470,22 @@ body.pc.jugando > p { flex: none; margin: 4px 8px; }
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 8px;
+  box-sizing: border-box;
   container-type: size;
 }
 
-/* DOOM dibuja 320x200 con píxeles no cuadrados: se muestra en 4:3. */
+/* DOOM dibuja 320x200 con píxeles no cuadrados: se muestra en 4:3.
+   El marco biselado queda por fuera (outline) para no restar espacio. */
 .pantalla {
   position: relative;
-  width: min(100cqw, 100cqh * 4 / 3);
+  width: min(100cqw - 12px, (100cqh - 12px) * 4 / 3);
   aspect-ratio: 4 / 3;
   background: #000;
+  outline: 4px solid #3a3a3a;
+  box-shadow:
+    0 0 0 6px #000,
+    0 0 0 7px var(--rojo-oscuro);
 }
 
 #canvas {
@@ -83,18 +505,107 @@ body.pc.jugando > p { flex: none; margin: 4px 8px; }
   justify-content: center;
   gap: 12px;
   background: #000;
-  color: #ddd;
+  color: var(--texto);
+  font-family: var(--fuente-pixel);
+  font-size: 26px;
   text-align: center;
   padding: 16px;
 }
 
 .overlay[hidden] { display: none; }
-.overlay.error { color: #f66; }
+.overlay.error { color: var(--error); }
 
-/* ---------- Celular ---------- */
+/* Pausa general (sobre el juego) */
+.pausa {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+  padding: 16px;
+  box-sizing: border-box;
+  background: rgba(8, 8, 8, 0.94);
+}
 
+.pausa[hidden] { display: none; }
+.pausa .modulo { max-width: 760px; margin: 0 auto; }
+.pausa #motivo-pausa { color: var(--amarillo); }
+.pausa .motivo:empty, .pausa #motivo-pausa:empty { display: none; }
+.pausa table { margin: 8px 0; }
+
+/* ---------- Columnas de jugadores (PC, a la derecha del juego) ---------- */
+
+.acciones {
+  flex: none;
+  display: flex;
+  gap: 4px;
+  padding: 8px;
+  overflow: hidden;
+  font-size: 11px;
+  background: var(--fondo-contenedor);
+  border-left: 2px solid;
+  border-image: linear-gradient(to bottom, var(--naranja), var(--rojo)) 1;
+}
+
+.acciones:empty { display: none; }
+
+.columna {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 8.5em;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.columna > strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 2px 4px;
+  font-family: var(--fuente-sub);
+  text-transform: uppercase;
+  text-shadow: 1px 1px 0 #000;
+  background: linear-gradient(to bottom, var(--barra-arriba), var(--barra-abajo));
+  border-top: 1px solid var(--barra-brillo);
+  border-bottom: 1px solid #000;
+}
+
+.columna > small { color: var(--texto-tenue); padding: 0 4px; }
+
+.accion {
+  display: flex;
+  flex-direction: column;
+  padding: 3px 5px;
+  background: var(--fondo-modulo);
+  border: 2px solid;
+  border-color: var(--bisel-luz) var(--bisel-sombra) var(--bisel-sombra) var(--bisel-luz);
+}
+
+.accion small { color: var(--texto-suave); }
+.accion b { font-family: var(--fuente-pixel); font-size: 16px; font-weight: 400; line-height: 1; color: var(--amarillo); }
+
+.accion.activa {
+  color: #000;
+  background: linear-gradient(to bottom, var(--naranja-claro), var(--naranja));
+  border-color: var(--rojo-oscuro) #ffd29a #ffd29a var(--rojo-oscuro);
+}
+
+.accion.activa small { color: #3a1500; }
+.accion.activa b { color: #000; }
+
+/* =====================================================================
+   Celular (control.html)
+   El estilo es el mismo, pero con texto más grande, inputs de 16 px
+   (evita el zoom de iOS) y botones táctiles de al menos 44 px.
+   ===================================================================== */
+
+body.celular {
+  font-size: 15px;
+  background: transparent;
+}
+
+.celular button { min-height: 44px; }
 .celular input, .celular select { font-size: 16px; padding: 6px; }
-
+.celular h2 { font-size: 16px; }
 
 /* Botones táctiles grandes, sin zoom ni selección al mantenerlos presionados. */
 button.tactil {
@@ -106,20 +617,6 @@ button.tactil {
   -webkit-user-select: none;
   -webkit-touch-callout: none;
 }
-
-/* ---------- Pausa general (PC) ---------- */
-
-.pausa {
-  position: absolute;
-  inset: 0;
-  overflow: auto;
-  padding: 16px;
-  background: rgba(255, 255, 255, 0.95);
-}
-
-.pausa[hidden] { display: none; }
-
-/* ---------- Partida en el celular ---------- */
 
 /* Todas las vistas del celular ocupan la pantalla completa, sin scroll. */
 body.celular.fija {
@@ -135,7 +632,16 @@ body.celular.fija {
   max-width: none;
 }
 
-body.celular.fija #mensaje { flex: none; margin: 8px 8px 0; }
+/* Mensajes: barra de estado */
+body.celular.fija #mensaje {
+  flex: none;
+  margin: 0;
+  padding: 4px 8px;
+  font-size: 13px;
+  background: #0f0f0f;
+  border-bottom: 1px solid #333;
+}
+
 body.celular.fija #mensaje:empty { display: none; }
 
 body.celular.fija #vista-unirse:not([hidden]),
@@ -150,21 +656,55 @@ body.celular.fija #vista-juego:not([hidden]) {
   box-sizing: border-box;
 }
 
-/* Unirse: formulario centrado */
+/* Unirse: logo y formulario centrados */
 body.celular.fija #vista-unirse:not([hidden]) { justify-content: center; }
-#vista-unirse h1 { margin: 0; }
+#vista-unirse .logo { text-align: center; font-size: 48px; }
+#vista-unirse .modulo { margin: 0; }
 #vista-unirse input { width: 100%; box-sizing: border-box; }
+#vista-unirse button { width: 100%; font-size: 1.1em; }
 
 /* ---------- Lobby, calibración y pausa general en el celular ---------- */
 
-.cabecera { flex: none; }
+.cabecera {
+  flex: none;
+  padding: 6px 8px;
+  font-family: var(--fuente-sub);
+  color: #fff;
+  text-shadow: 1px 1px 0 #000;
+  background: linear-gradient(to bottom, var(--barra-arriba), var(--barra-abajo));
+  border: 2px solid;
+  border-color: var(--barra-brillo) #000 #000 var(--barra-brillo);
+}
+
 .cabecera p { margin: 4px 0 0; }
+.cabecera p.error { color: var(--amarillo); }
 .cabecera p:empty { display: none; }
 
-.pestanas { display: flex; gap: 4px; flex: none; }
+/* Pestañas con esquinas redondeadas arriba */
+.pestanas {
+  display: flex;
+  gap: 4px;
+  flex: none;
+  margin-bottom: -8px;    /* se pega al panel */
+  padding: 0 4px;
+  border-bottom: 2px solid var(--naranja);
+}
+
 .pestanas[hidden] { display: none; }
-.pestanas button { flex: 1; }
-.pestanas button.activa { font-weight: bold; border-bottom: 3px solid #111; }
+
+.pestanas button {
+  flex: 1;
+  min-height: 44px;
+  border-radius: 8px 8px 0 0;
+  border-bottom: 0;
+}
+
+.pestanas button.activa {
+  color: #fff;
+  text-shadow: 1px 1px 0 #000;
+  background: linear-gradient(to bottom, var(--naranja-claro), var(--naranja));
+  border-color: #ffd29a var(--rojo-oscuro) transparent #ffd29a;
+}
 
 .panel {
   display: flex;
@@ -173,9 +713,17 @@ body.celular.fija #vista-unirse:not([hidden]) { justify-content: center; }
   flex: 1 1 auto;
   min-height: 0;
   overflow: hidden;
+  padding: 6px;
+  background: var(--fondo-modulo);
+  border: 2px solid;
+  border-top: 0;
+  border-color: var(--bisel-luz) var(--bisel-sombra) var(--bisel-sombra) var(--bisel-luz);
 }
 
 .panel[hidden] { display: none; }
+
+/* Sin pestañas (calibración), el panel lleva su borde completo */
+.pestanas[hidden] ~ .panel { border-top: 2px solid var(--bisel-luz); }
 
 /* Una fila compacta por control: nombre y dueño · sensor · botón */
 .filas {
@@ -194,19 +742,24 @@ body.celular.fija #vista-unirse:not([hidden]) { justify-content: center; }
   grid-template-columns: minmax(0, 1fr) minmax(0, 9em) 4.8em;
   align-items: center;
   gap: 6px;
-  padding: 2px 0;
-  border-bottom: 1px solid #ddd;
+  padding: 2px 4px;
+  border-bottom: 1px solid #000;
+  box-shadow: 0 1px 0 #333;
 }
 
-.fila.mia { background: #f0f0f0; }
+.fila.mia {
+  background: #3a2410;
+  box-shadow: inset 4px 0 0 var(--naranja), 0 1px 0 #333;
+  padding-left: 10px;
+}
+
 .col-nombre { display: flex; flex-direction: column; min-width: 0; }
-.col-nombre small { color: #555; }
+.col-nombre strong { line-height: 1.2; font-family: var(--fuente-sub); }
+.col-nombre small { line-height: 1.2; color: var(--texto-suave); }
 .col-sensor { min-width: 0; width: 100%; }
-span.col-sensor { font-size: 0.9em; color: #555; }
+span.col-sensor { font-size: 0.9em; color: var(--texto-suave); }
 .fila button { padding: 4px; }
 .fila select { padding: 4px; }
-.col-nombre strong { line-height: 1.2; }
-.col-nombre small { line-height: 1.2; }
 
 .botones-ajustes { display: flex; gap: 6px; flex: none; }
 .botones-ajustes button { flex: 1; }
@@ -219,7 +772,7 @@ span.col-sensor { font-size: 0.9em; color: #555; }
   font-size: 0.9em;
 }
 
-.fila-ajuste small { color: #555; }
+.fila-ajuste small { color: var(--texto-suave); }
 .fila-ajuste input[type=number] { width: 100%; box-sizing: border-box; }
 .fila-ajuste input[type=checkbox] { justify-self: end; width: 24px; height: 24px; }
 #lista-invertir { display: flex; flex-direction: column; gap: 6px; flex: none; }
@@ -238,10 +791,16 @@ span.col-sensor { font-size: 0.9em; color: #555; }
 .pie { flex: none; display: flex; flex-direction: column; gap: 6px; }
 .pie p { margin: 0; min-height: 2.5em; font-size: 0.85em; }
 .botones-pie { display: flex; gap: 6px; }
-.botones-pie button { min-height: 44px; }
+.botones-pie button { min-height: 48px; }
 .botones-pie button[hidden] { display: none; }
 .boton-listo { flex: 1; font-size: 1.1em; }
-.boton-listo.activo { background: #111; color: #fff; }
+
+/* "Estoy listo" presionado: queda hundido */
+button.boton-listo.activo {
+  color: var(--amarillo);
+  background: linear-gradient(to bottom, var(--rojo-oscuro), var(--rojo));
+  border-color: #000 #ffd29a #ffd29a #000;
+}
 
 /* ---------- Partida en el celular: solo elementos táctiles ---------- */
 
@@ -250,7 +809,14 @@ span.col-sensor { font-size: 0.9em; color: #555; }
   position: relative;
   flex: 1 1 auto;
   min-height: 0;
-  border: 1px dashed #999;
+  background-color: #101010;
+  /* Cuadrícula de 16 px, como papel milimetrado de pantalla */
+  background-image:
+    linear-gradient(to right, #1d1d1d 1px, transparent 1px),
+    linear-gradient(to bottom, #1d1d1d 1px, transparent 1px);
+  background-size: 16px 16px;
+  border: 3px solid;
+  border-color: var(--bisel-sombra) var(--bisel-luz) var(--bisel-luz) var(--bisel-sombra);
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
@@ -267,8 +833,21 @@ span.col-sensor { font-size: 0.9em; color: #555; }
   pointer-events: none;
 }
 
-.joystick-base { width: 120px; height: 120px; border: 2px solid #999; }
-.joystick-perilla { width: 50px; height: 50px; background: #555; }
+.joystick-base {
+  width: 120px;
+  height: 120px;
+  border: 3px solid #555;
+  background: radial-gradient(circle, rgba(255, 138, 0, 0.12), rgba(0, 0, 0, 0.4));
+  box-shadow: inset 2px 2px 0 #000, 0 0 0 1px #000;
+}
+
+.joystick-perilla {
+  width: 50px;
+  height: 50px;
+  background: radial-gradient(circle at 35% 30%, var(--naranja-claro), var(--naranja) 45%, var(--rojo));
+  border: 2px solid #000;
+  box-shadow: inset -2px -2px 0 rgba(0, 0, 0, 0.35), inset 2px 2px 0 rgba(255, 255, 255, 0.35);
+}
 
 /* Abajo: Mapa en la esquina izquierda, carrusel de armas a la derecha */
 .barra-inferior {
@@ -293,40 +872,21 @@ span.col-sensor { font-size: 0.9em; color: #555; }
 
 .carrusel[hidden] { display: none; }
 .carrusel button.tactil { flex: 0 0 64px; }
-#arma-actual { flex: 1 1 auto; text-align: center; }
 
-/* ---------- Columnas de jugadores (PC, a la derecha del juego) ---------- */
-
-.acciones {
-  flex: none;
+/* Arma actual: pantalla LCD */
+#arma-actual {
+  flex: 1 1 auto;
+  align-self: stretch;
   display: flex;
-  gap: 4px;
-  padding: 8px;
-  overflow: hidden;
-  font-size: 0.85em;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+  font-family: var(--fuente-pixel);
+  font-size: 24px;
+  text-align: center;
+  color: var(--naranja);
+  text-shadow: 0 0 4px rgba(255, 138, 0, 0.6);
+  background: #000;
+  border: 3px solid;
+  border-color: var(--bisel-sombra) var(--bisel-luz) var(--bisel-luz) var(--bisel-sombra);
 }
-
-.acciones:empty { display: none; }
-
-.columna {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  width: 7.5em;
-  min-height: 0;
-  overflow: hidden;
-}
-
-.columna > strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-.accion {
-  display: flex;
-  flex-direction: column;
-  padding: 4px;
-  border: 1px solid #999;
-}
-
-.accion small { color: #555; }
-.accion b { font-family: monospace; }
-.accion.activa { background: #111; color: #fff; }
-.accion.activa small { color: #ccc; }

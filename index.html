@@ -5,50 +5,67 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Doomy plays DOOM</title>
   <link rel="icon" href="data:,">
+  <!-- Fuentes del design system (design_system_2000s.json); sin internet se usa monospace -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Space+Mono:wght@400;700&family=VT323&display=swap">
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="pc">
-  <h1>Doomy plays DOOM</h1>
+  <!-- Cabecera: logo a la izquierda (se oculta durante la partida) -->
+  <header class="cabecera-sitio">
+    <h1 class="logo">Doomy plays DOOM</h1>
+    <p class="lema">Un solo marine · muchos jugadores · un celular cada uno</p>
+  </header>
+
   <p id="conexion" class="aviso">Conectando al broker…</p>
   <p id="aviso-motor" class="error" hidden></p>
 
   <!-- Lobby: sala, QR y asignación de controles -->
   <section id="lobby">
     <div class="sala">
-      <div>
-        <h2>Sala <span id="codigo-sala"></span></h2>
-        <p>Escanea el código con el celular para unirte (máximo <span id="max-jugadores"></span> jugadores).</p>
-        <div id="qr"></div>
-        <p><a id="enlace-control" target="_blank" rel="noopener"></a></p>
-        <p>
-          <button type="button" id="nueva-sala">Nueva sala</button>
-          <button type="button" id="borrar-partidas">Borrar partidas guardadas</button>
-        </p>
+      <div class="modulo">
+        <h2 class="modulo-titulo">Sala <span id="codigo-sala"></span></h2>
+        <div class="modulo-cuerpo">
+          <p>Escanea el código con el celular para unirte (máximo <span id="max-jugadores"></span> jugadores).</p>
+          <div id="qr"></div>
+          <p><a id="enlace-control" target="_blank" rel="noopener"></a></p>
+          <p>
+            <button type="button" id="nueva-sala">Nueva sala</button>
+            <button type="button" id="borrar-partidas">Borrar partidas guardadas</button>
+          </p>
+        </div>
       </div>
 
-      <div>
-        <h2>Jugadores</h2>
-        <ul class="lista-jugadores"></ul>
+      <div class="modulo">
+        <h2 class="modulo-titulo">Jugadores</h2>
+        <div class="modulo-cuerpo">
+          <ul class="lista-jugadores"></ul>
+        </div>
       </div>
     </div>
 
-    <h2>Controles</h2>
-    <table>
-      <thead>
-        <tr><th>Control</th><th>Jugador</th><th>Sensor</th></tr>
-      </thead>
-      <tbody class="tabla-controles"></tbody>
-    </table>
+    <div class="modulo">
+      <h2 class="modulo-titulo">Controles</h2>
+      <div class="modulo-cuerpo">
+        <table>
+          <thead>
+            <tr><th>Control</th><th>Jugador</th><th>Sensor</th></tr>
+          </thead>
+          <tbody class="tabla-controles"></tbody>
+        </table>
 
-    <p>
-      <button type="button" id="iniciar" disabled>Iniciar partida nueva</button>
-      <button type="button" id="continuar" disabled hidden>Continuar partida guardada</button>
-      <span class="motivo aviso"></span>
-    </p>
-    <p class="aviso">
-      En la partida, el teclado del PC solo maneja el menú: <strong>Esc</strong> lo abre (elige <em>New Game</em>),
-      <strong>flechas o WASD</strong> lo recorren, <strong>Enter</strong> acepta y <strong>Espacio</strong> abre la pausa general.
-    </p>
+        <p>
+          <button type="button" id="iniciar" class="principal" disabled>Iniciar partida nueva</button>
+          <button type="button" id="continuar" class="principal" disabled hidden>Continuar partida guardada</button>
+          <span class="motivo aviso"></span>
+        </p>
+        <p class="aviso">
+          En la partida, el teclado del PC solo maneja el menú: <strong>Esc</strong> lo abre (elige <em>New Game</em>),
+          <strong>flechas o WASD</strong> lo recorren, <strong>Enter</strong> acepta y <strong>Espacio</strong> abre la pausa general.
+        </p>
+      </div>
+    </div>
   </section>
 
   <!-- Juego: DOOM al centro y, a la derecha, una columna por jugador -->
@@ -65,26 +82,41 @@
 
         <!-- Pausa general: DOOM se detiene y los celulares pueden cambiar controles y ajustes -->
         <div class="pausa" id="pausa" hidden>
-          <h2>Pausa general</h2>
-          <p id="motivo-pausa"></p>
-          <ul class="lista-jugadores"></ul>
-          <table>
-            <thead>
-              <tr><th>Control</th><th>Jugador</th><th>Sensor</th></tr>
-            </thead>
-            <tbody class="tabla-controles"></tbody>
-          </table>
-          <p>
-            <button type="button" id="reanudar" disabled>Continuar (Espacio)</button>
-            <button type="button" id="volver-lobby">Volver al lobby (guarda la partida)</button>
-          </p>
-          <p class="motivo"></p>
+          <div class="modulo">
+            <h2 class="modulo-titulo">Pausa general</h2>
+            <div class="modulo-cuerpo">
+              <p id="motivo-pausa"></p>
+              <ul class="lista-jugadores"></ul>
+              <table>
+                <thead>
+                  <tr><th>Control</th><th>Jugador</th><th>Sensor</th></tr>
+                </thead>
+                <tbody class="tabla-controles"></tbody>
+              </table>
+              <p>
+                <button type="button" id="reanudar" class="principal" disabled>Continuar (Espacio)</button>
+                <button type="button" id="volver-lobby">Volver al lobby (guarda la partida)</button>
+              </p>
+              <p class="motivo"></p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <div id="acciones" class="acciones"></div>
   </section>
+
+  <!-- Pie de página: insignias de 88x31 y nota legal (se oculta durante la partida) -->
+  <footer class="pie-sitio">
+    <div class="insignias">
+      <span class="insignia"><b>MQTT</b>powered</span>
+      <span class="insignia"><b>DOOM</b>1993</span>
+      <span class="insignia"><b>HTML</b>sin plugins</span>
+      <span class="insignia"><b>1024</b>x768 ok</span>
+    </div>
+    <p>© 2026 Doomy plays DOOM · Licencia MIT · DOOM es marca registrada de id Software.</p>
+  </footer>
 
   <script src="https://unpkg.com/mqtt@5.10.1/dist/mqtt.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
