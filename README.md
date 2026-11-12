@@ -396,3 +396,7 @@ Finalmente en esta web se puede experimentar como no solo el tacto trabaja en co
 Esta experiencia busca ser compleja sin caer en la frustración, es por ello que consta de calibración de los sensores y el uso de otros con menor complejidad
 
 En esta experiencia se encuentra la interconexión entre los distintos sentidos y como el tacto puede hacer de anclaje entre ellos
+
+## Licencias
+
+El código fuente del motor de DOOM se rige bajo la licencia GNU GPL, permitiendo su libre uso, modificación y distribución. Para efectos de este proyecto, los recursos audiovisuales originales (archivos WAD) se utilizan bajo la doctrina de fair use (uso legítimo), limitando su aplicación exclusivamente a fines educativos, de investigación técnica y sin fines de lucro, sin sustituir ni afectar el mercado comercial de la obra
