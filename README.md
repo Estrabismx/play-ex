@@ -394,3 +394,5 @@ Elementos a considerar:
 Finalmente en esta web se puede experimentar como no solo el tacto trabaja en conjunto conjunto con otros sensores, no solo en el cuerpo humano, si no tambien en los dispositivos. En _Doomy plays DOOM_, se representa como ninguna sensación funciona sola, todas estas se complementan para lograr una interpretación de la realidad y en este caso la realidad es jugar DOOM. 
 
 Esta experiencia busca ser compleja sin caer en la frustración, es por ello que consta de calibración de los sensores y el uso de otros con menor complejidad
+
+En esta experiencia se encuentra la interconexión entre los distintos sentidos y como el tacto puede hacer de anclaje entre ellos
