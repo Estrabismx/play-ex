@@ -9,6 +9,44 @@
 
 <br>
 
+## ¿Cómo probarlo?
+
+_Doomy plays DOOM_ es un DOOM que se juega en grupo: el juego se ve en un computador y cada persona lo controla desde su celular, encargándose solo de una parte (una persona camina, otra dispara, otra abre puertas, etc.).
+
+### Lo que necesitas
+
+- **Un computador** (PC o notebook) con navegador. Ahí se verá el juego, idealmente conectado a una pantalla grande.
+- **Entre 1 y 7 celulares** con internet y cámara para escanear un código QR.
+- Todos deben tener **conexión a internet** (no es necesario estar en la misma red Wi-Fi).
+
+### Paso a paso
+
+1. **Abre la web en el computador:** <https://estrabismx.github.io/play-ex/>. Aparecerá una **sala** con un código de 5 letras y un **código QR**.
+2. **Únanse con el celular:** cada jugador escanea el QR con la cámara, escribe su nombre y toca **Unirse**. (Si el QR no funciona, se puede abrir el enlace que aparece bajo el QR y escribir el código de la sala).
+3. **Repártanse los controles:** en el celular aparece la lista de acciones del juego: _Moverse_, _Girar_, _Disparar_, _Usar / abrir puertas_, _Correr_, _Cambiar arma_ y _Mapa_. Cada jugador toca **Tomar** en las que quiera controlar y elige **cómo** hacerlo:
+   - **Táctil:** tocando o deslizando el dedo en la pantalla.
+   - **Giroscopio / Acelerómetro:** inclinando o sacudiendo el celular.
+   - **Micrófono:** con la voz (gritar, hablar fuerte o suave, sonidos agudos o graves).
+
+   Al tocar una acción, abajo se explica qué gesto hay que hacer. **Todas las acciones deben tener dueño** para poder empezar. Si el celular lo pide, acepta los permisos de movimiento o micrófono.
+4. **Calibra y confirma:** cuando hayas elegido, toca **Estoy listo**. El celular te pedirá dejarlo en una posición cómoda para tomarla como punto de partida; luego toca **Confirmar calibración**.
+5. **¡A jugar!** Cuando todos estén listos, en el computador se habilita **Iniciar partida nueva**. En el juego, presiona **Esc** y elige _New Game_ con las flechas y **Enter**.
+
+### Durante la partida
+
+- La pantalla del celular queda en blanco salvo que uses controles **táctiles** (joystick, botón _Mapa_ o selector de armas): el resto se controla moviendo el celular o con la voz.
+- Si algo no responde bien, presiona **Espacio** en el computador para abrir la **pausa general**: ahí cada jugador puede cambiar de controles o ajustar la sensibilidad en la pestaña **Ajustes** (o volver a calibrar).
+- Si alguien se desconecta, el juego se pausa solo para que otro jugador tome sus controles.
+- En el computador, el botón **Volver al lobby** guarda la partida automáticamente; después se puede retomar con **Continuar partida guardada**.
+
+> **Consejo:** no se pueden elegir en un mismo celular dos acciones que se activen con un gesto parecido (por ejemplo, dos con el micrófono). Si un control aparece bloqueado, que lo tome otra persona o elijan otro sensor.
+
+<br>
+
+---
+
+<br>
+
 ## 1. Contexto
 
 En el año 2014 en la plataforma Twitch, se realizó un directo todos quienes observaban la transmisión podían jugar, este evento se llamó "[_Twitch Plays Pokemon_](https://www.twitch.tv/twitchplayspokemon/videos)". Es decir que miles de personas controlaban la misma partida y al mismo personaje a la vez, esto fue posible ya que mediante la escritura de comandes en el chat de Twitch un _script_ lo interpretaba y realizaba las acciones en el videojuego.
